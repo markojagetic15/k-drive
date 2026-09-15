@@ -1,0 +1,254 @@
+{
+  "contact": {
+    "phone": "091 723 6657",
+    "phoneHref": "tel:+385917236657",
+    "address": "Podolje 1, 10370 Dugo Selo",
+    "hours": {
+      "hr": "Pon - Pet: 9:00 - 17:00h",
+      "en": "Mon - Fri: 9:00 AM - 5:00 PM"
+    },
+    "mapQuery": "Podolje 1, 10370 Dugo Selo",
+    "email": "marko.jagetic3@gmail.com"
+  },
+  "nav": {
+    "usluge": { "hr": "Usluge", "en": "Services" },
+    "oNama": { "hr": "O nama", "en": "About us" },
+    "proces": { "hr": "Proces", "en": "Process" },
+    "kontakt": { "hr": "Kontakt", "en": "Contact" }
+  },
+  "hero": {
+    "eyebrow": { "hr": "Autoservis - Dugo Selo", "en": "Auto repair shop - Dugo Selo" },
+    "title": {
+      "hr": "Popravljamo sve marke automobila",
+      "en": "We repair all makes of cars"
+    },
+    "lead": {
+      "hr": "Vaše povjerenje je naša odgovornost. U K-Drive servisu ne popravljamo samo kvarove, mi pronalazimo rješenja, precizno i pouzdano.",
+      "en": "Your trust is our responsibility. At K-Drive we don't just fix breakdowns, we find solutions, precisely and reliably."
+    },
+    "ctaPrimary": { "hr": "Zatraži besplatnu procjenu", "en": "Request a free estimate" },
+    "ctaSecondary": { "hr": "Nazovi", "en": "Call" },
+    "stats": [
+      { "id": "stat-services", "icon": "wrench", "value": "8+", "label": { "hr": "usluga na jednom mjestu", "en": "services in one place" } },
+      { "id": "stat-pricing", "icon": "tag", "value": "100%", "label": { "hr": "transparentne cijene", "en": "transparent pricing" } },
+      { "id": "stat-brands", "icon": "wheel", "value": "Sve marke", "label": { "hr": "i modeli vozila", "en": "and vehicle models" } }
+    ],
+    "chips": [
+      { "id": "chip-tuning", "icon": "gauge", "label": { "hr": "Chip tuning: do +30% snage", "en": "Chip tuning: up to +30% power" } },
+      { "id": "chip-hours", "icon": "clock", "label": { "hr": "Radimo prema dogovoru", "en": "Available by appointment" } }
+    ],
+    "image": "/uploads/hero-workshop.jpg"
+  },
+  "brands": {
+    "label": { "hr": "Servisiramo sve marke vozila, uključujući", "en": "We service all vehicle makes, including" },
+    "items": ["BMW", "Mercedes-Benz", "Volkswagen", "Audi", "Škoda", "Renault", "Peugeot", "Opel", "Ford", "Fiat"]
+  },
+  "about": {
+    "eyebrow": { "hr": "O nama", "en": "About us" },
+    "title": { "hr": "Rješenja, ne samo popravci", "en": "Solutions, not just repairs" },
+    "paragraphs": [
+      {
+        "hr": "U K-Drive servisu ne popravljamo samo kvarove, mi pronalazimo rješenja. Fokusirani smo na pouzdanost, preciznost i kontinuirano usavršavanje kako bi vaše vozilo bilo sigurno na cesti.",
+        "en": "At K-Drive we don't just fix breakdowns, we find solutions. We focus on reliability, precision and continuous improvement so your vehicle stays safe on the road."
+      },
+      {
+        "hr": "Bilo da vam treba redovni servis, hitna popravka ili priprema za tehnički pregled, javite nam se i dogovorit ćemo termin koji vam odgovara.",
+        "en": "Whether you need routine servicing, an urgent repair or preparation for a vehicle inspection, get in touch and we'll arrange a time that suits you."
+      }
+    ],
+    "image": "/uploads/mechanic-portrait.jpg",
+    "badgeValue": { "hr": "Sve marke", "en": "All makes" },
+    "badgeLabel": { "hr": "i modeli vozila", "en": "and vehicle models" }
+  },
+  "highlights": [
+    {
+      "id": "highlight-team",
+      "icon": "team",
+      "title": { "hr": "Iskusan tim", "en": "Experienced team" },
+      "desc": {
+        "hr": "Vrhunski alati i originalni dijelovi u rukama provjerenih majstora s dugogodišnjim iskustvom.",
+        "en": "Top-tier tools and genuine parts in the hands of proven mechanics with years of experience."
+      }
+    },
+    {
+      "id": "highlight-pricing",
+      "icon": "tag",
+      "title": { "hr": "Transparentne cijene", "en": "Transparent pricing" },
+      "desc": {
+        "hr": "Jasnu ponudu dobivate prije nego krenemo u popravak, bez skrivenih troškova i iznenađenja.",
+        "en": "You get a clear quote before we start any repair, with no hidden costs or surprises."
+      }
+    },
+    {
+      "id": "highlight-equipment",
+      "icon": "settings",
+      "title": { "hr": "Moderna oprema", "en": "Modern equipment" },
+      "desc": {
+        "hr": "Specijalizirani alati i dijagnostička oprema prilagođena svim markama i modelima vozila.",
+        "en": "Specialised tools and diagnostic equipment suited to every make and model of vehicle."
+      }
+    }
+  ],
+  "services": {
+    "eyebrow": { "hr": "Usluge", "en": "Services" },
+    "title": { "hr": "Sve što vašem vozilu treba", "en": "Everything your vehicle needs" },
+    "lead": {
+      "hr": "Od sezonske vulkanizacije do naprednog chip tuninga, pokrivamo kompletnu njegu vozila pod jednim krovom.",
+      "en": "From seasonal tyre changes to advanced chip tuning, we cover complete vehicle care under one roof."
+    },
+    "items": [
+      {
+        "id": "service-tyres",
+        "icon": "wheel",
+        "title": { "hr": "Vulkanizacija", "en": "Tyre service" },
+        "desc": {
+          "hr": "Sezonska promjena guma s potpunom provjerom i balansiranjem kotača.",
+          "en": "Seasonal tyre changes with a full check and wheel balancing."
+        }
+      },
+      {
+        "id": "service-mechanics",
+        "icon": "wrench",
+        "title": { "hr": "Automehanika", "en": "Auto mechanics" },
+        "desc": {
+          "hr": "Sve mehaničke popravke i pregled vozila, od zamjene ulja do dijagnostike motora.",
+          "en": "All mechanical repairs and vehicle checks, from oil changes to engine diagnostics."
+        }
+      },
+      {
+        "id": "service-electrics",
+        "icon": "bolt",
+        "title": { "hr": "Autoelektrika", "en": "Auto electrics" },
+        "desc": {
+          "hr": "Elektronska dijagnostika i ECU programiranje za sve marke vozila.",
+          "en": "Electronic diagnostics and ECU programming for all vehicle makes."
+        }
+      },
+      {
+        "id": "service-ac",
+        "icon": "snow",
+        "title": { "hr": "Klima servis", "en": "AC service" },
+        "desc": {
+          "hr": "Kompletan servis klima uređaja, čišćenje kondenzatora i zamjena filtera.",
+          "en": "Complete air conditioning service, condenser cleaning and filter replacement."
+        }
+      },
+      {
+        "id": "service-inspection",
+        "icon": "clipboard",
+        "title": { "hr": "Tehnički pregled", "en": "Vehicle inspection" },
+        "desc": {
+          "hr": "Priprema vozila za tehnički pregled i zamjena potrebnih dijelova.",
+          "en": "Preparing your vehicle for its technical inspection and replacing any required parts."
+        }
+      },
+      {
+        "id": "service-purchase-check",
+        "icon": "search",
+        "title": { "hr": "Pomoć pri kupnji vozila", "en": "Pre-purchase inspection" },
+        "desc": {
+          "hr": "Provjera tehničkog stanja vozila i uvozna dokumentacija prije kupnje.",
+          "en": "Technical condition check and import paperwork review before you buy."
+        }
+      },
+      {
+        "id": "service-tuning",
+        "icon": "gauge",
+        "title": { "hr": "Chip tuning", "en": "Chip tuning" },
+        "desc": {
+          "hr": "Do 30% više konjskih snaga bez mehaničkih zahvata na motoru.",
+          "en": "Up to 30% more horsepower with no mechanical changes to the engine."
+        }
+      },
+      {
+        "id": "service-dpf",
+        "icon": "filter",
+        "title": { "hr": "DPF čišćenje", "en": "DPF cleaning" },
+        "desc": {
+          "hr": "Profesionalno čišćenje dizelskih filtera čestica (DPF).",
+          "en": "Professional cleaning of diesel particulate filters (DPF)."
+        }
+      }
+    ]
+  },
+  "values": [
+    {
+      "id": "value-reliability",
+      "icon": "motor",
+      "title": { "hr": "Visoka pouzdanost", "en": "High reliability" },
+      "desc": {
+        "hr": "Optimalna snaga i performanse za svako vozilo.",
+        "en": "Optimal power and performance for every vehicle."
+      }
+    },
+    {
+      "id": "value-diagnostics",
+      "icon": "target",
+      "title": { "hr": "Precizna dijagnostika", "en": "Precise diagnostics" },
+      "desc": {
+        "hr": "Najmodernija oprema za brzo otkrivanje kvarova.",
+        "en": "State-of-the-art equipment for fast fault detection."
+      }
+    },
+    {
+      "id": "value-pricing",
+      "icon": "key",
+      "title": { "hr": "Povoljne cijene", "en": "Affordable prices" },
+      "desc": {
+        "hr": "Transparentne cijene bez iznenađenja.",
+        "en": "Transparent pricing with no surprises."
+      }
+    }
+  ],
+  "process": {
+    "eyebrow": { "hr": "Naš proces", "en": "Our process" },
+    "title": { "hr": "Težimo savršenstvu", "en": "We strive for perfection" },
+    "lead": {
+      "hr": "Svaki posjet vozila prolazi kroz tri jasna koraka, bez nagađanja i bez iznenađenja.",
+      "en": "Every vehicle visit follows three clear steps, no guesswork and no surprises."
+    },
+    "steps": [
+      {
+        "id": "step-diagnostics",
+        "title": { "hr": "Dijagnostika", "en": "Diagnostics" },
+        "desc": {
+          "hr": "Utvrđujemo točan uzrok kvara pomoću moderne dijagnostičke opreme.",
+          "en": "We identify the exact cause of the issue using modern diagnostic equipment."
+        },
+        "image": "/uploads/diagnostics.jpg"
+      },
+      {
+        "id": "step-inspection",
+        "title": { "hr": "Pregled vozila", "en": "Vehicle inspection" },
+        "desc": {
+          "hr": "Detaljno provjeravamo stanje vozila i dogovaramo opseg radova.",
+          "en": "We thoroughly check the condition of your vehicle and agree on the scope of work."
+        },
+        "image": "/uploads/inspection.jpg"
+      },
+      {
+        "id": "step-performance",
+        "title": { "hr": "Performanse", "en": "Performance" },
+        "desc": {
+          "hr": "Vraćamo vozilo u pouzdano i sigurno stanje, spremno za cestu.",
+          "en": "We return your vehicle to a reliable, safe condition, ready for the road."
+        },
+        "image": "/uploads/car-lift.jpg"
+      }
+    ]
+  },
+  "cta": {
+    "title": { "hr": "Trebate pregled ili popravak vozila?", "en": "Need a vehicle inspection or repair?" },
+    "lead": {
+      "hr": "Nazovite nas ili zatražite besplatnu procjenu još danas.",
+      "en": "Call us or request a free estimate today."
+    },
+    "image": "/uploads/machine-detail.jpg"
+  },
+  "footer": {
+    "desc": {
+      "hr": "Autoservis za sve marke vozila u Dugom Selu. Vaše povjerenje je naša odgovornost.",
+      "en": "Auto repair shop for all vehicle makes in Dugo Selo. Your trust is our responsibility."
+    }
+  }
+}
