@@ -12,7 +12,16 @@ function getTransporter() {
   })
 }
 
-export async function sendInquiryEmail({ to, name, contact, service, message }) {
+export async function sendInquiryEmail({
+  to,
+  name,
+  contact,
+  vehicle,
+  year,
+  service,
+  preferredDate,
+  message,
+}) {
   const transporter = getTransporter()
   if (!transporter) {
     throw new Error(
@@ -30,7 +39,9 @@ export async function sendInquiryEmail({ to, name, contact, service, message }) 
   const text = [
     `Ime i prezime: ${name}`,
     `Kontakt: ${contact}`,
+    vehicle ? `Vozilo: ${vehicle}${year ? ` (${year})` : ''}` : null,
     service ? `Usluga: ${service}` : null,
+    preferredDate ? `Željeni termin: ${preferredDate}` : null,
     '',
     message,
   ]

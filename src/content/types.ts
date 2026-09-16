@@ -27,6 +27,7 @@ export type IconName =
   | 'key'
   | 'menu'
   | 'close'
+  | 'star'
 
 export type ServiceItem = {
   id: string
@@ -97,6 +98,11 @@ export type SiteContent = {
   brands: {
     label: Localized
     items: string[]
+  }
+  reviews: {
+    rating: string
+    count: string
+    url: string
   }
   about: {
     eyebrow: Localized

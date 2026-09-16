@@ -457,6 +457,50 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                   }
                 />
               </div>
+
+              <h3>Google recenzije</h3>
+              <p className="field-hint">
+                Ocjenu i broj recenzija ostavite prazno dok nemate stvarne
+                podatke s Google profila - prikazat će se samo poveznica.
+              </p>
+              <div className="field-grid">
+                <div className="field">
+                  <span className="field-label">Ocjena (npr. 4.9/5)</span>
+                  <input
+                    value={draft.reviews.rating}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        reviews: { ...draft.reviews, rating: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+                <div className="field">
+                  <span className="field-label">Broj recenzija</span>
+                  <input
+                    value={draft.reviews.count}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        reviews: { ...draft.reviews, count: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+                <div className="field">
+                  <span className="field-label">Poveznica na Google recenzije</span>
+                  <input
+                    value={draft.reviews.url}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        reviews: { ...draft.reviews, url: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </div>
             </section>
           )}
 

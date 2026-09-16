@@ -152,6 +152,11 @@
   font-weight: 600;
   color: var(--text-strong);
 }
+.field-hint {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: -8px;
+}
 
 input,
 select,

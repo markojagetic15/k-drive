@@ -42,7 +42,10 @@ export function fetchMe() {
 export function sendInquiry(data: {
   name: string
   contact: string
+  vehicle: string
+  year: string
   service: string
+  preferredDate: string
   message: string
   website: string
 }) {

@@ -12,7 +12,10 @@ import type { IconName } from './content/types'
 type InquiryForm = {
   name: string
   contact: string
+  vehicle: string
+  year: string
   service: string
+  preferredDate: string
   message: string
   website: string
 }
@@ -20,7 +23,10 @@ type InquiryForm = {
 const EMPTY_FORM: InquiryForm = {
   name: '',
   contact: '',
+  vehicle: '',
+  year: '',
   service: '',
+  preferredDate: '',
   message: '',
   website: '',
 }
@@ -40,6 +46,11 @@ function App() {
     event.preventDefault()
     setMobileNavOpen(false)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  function requestServiceQuote(serviceTitle: string) {
+    setForm((prev) => ({ ...prev, service: serviceTitle }))
+    document.getElementById('kontakt')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   useEffect(() => {
@@ -241,6 +252,16 @@ function App() {
                   {t(content.hero.ctaSecondary)} {content.contact.phone}
                 </a>
               </div>
+              <div className="hero-quick-info">
+                <span>
+                  <Icon name="pin" />
+                  {content.contact.address}
+                </span>
+                <span>
+                  <Icon name="clock" />
+                  {t(content.contact.hours)}
+                </span>
+              </div>
               <div className="hero-stats">
                 {content.hero.stats.map((stat) => (
                   <div key={stat.id}>
@@ -280,6 +301,34 @@ function App() {
             </div>
           </div>
           <div className="angled-divider" aria-hidden="true" />
+        </section>
+
+        <section className="reviews-strip">
+          <div className="container reviews-inner">
+            <div className="reviews-stars" aria-hidden="true">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Icon name="star" key={i} />
+              ))}
+            </div>
+            {content.reviews.rating && (
+              <strong className="reviews-rating">
+                {content.reviews.rating}
+                {content.reviews.count
+                  ? ` · ${content.reviews.count} ${lang === 'hr' ? 'recenzija' : 'reviews'}`
+                  : ''}
+              </strong>
+            )}
+            <a
+              className="reviews-link"
+              href={content.reviews.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {lang === 'hr'
+                ? 'Pogledajte naše recenzije na Google mapama'
+                : 'See our reviews on Google Maps'}
+            </a>
+          </div>
         </section>
 
         <section className="section" id="o-nama">
@@ -344,6 +393,13 @@ function App() {
                   </div>
                   <h3>{t(service.title)}</h3>
                   <p>{t(service.desc)}</p>
+                  <button
+                    type="button"
+                    className="service-cta"
+                    onClick={() => requestServiceQuote(t(service.title))}
+                  >
+                    {lang === 'hr' ? 'Upit za ovu uslugu' : 'Ask about this service'}
+                  </button>
                 </Reveal>
               ))}
             </div>
@@ -510,26 +566,69 @@ function App() {
                       />
                     </div>
                   </div>
-                  <div className="form-field">
-                    <label htmlFor="service">
-                      {lang === 'hr' ? 'Usluga' : 'Service'}
-                    </label>
-                    <select
-                      id="service"
-                      value={form.service}
-                      onChange={(e) => updateField('service', e.target.value)}
-                    >
-                      <option value="">
-                        {lang === 'hr'
-                          ? 'Odaberite uslugu (opcionalno)'
-                          : 'Choose a service (optional)'}
-                      </option>
-                      {SERVICE_OPTIONS.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
+                  <div className="form-grid">
+                    <div className="form-field">
+                      <label htmlFor="vehicle">
+                        {lang === 'hr' ? 'Marka i model vozila' : 'Vehicle make and model'}
+                      </label>
+                      <input
+                        id="vehicle"
+                        type="text"
+                        value={form.vehicle}
+                        onChange={(e) => updateField('vehicle', e.target.value)}
+                        placeholder={lang === 'hr' ? 'npr. VW Golf 5' : 'e.g. VW Golf 5'}
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label htmlFor="year">
+                        {lang === 'hr' ? 'Godište' : 'Year'}
+                      </label>
+                      <input
+                        id="year"
+                        type="text"
+                        inputMode="numeric"
+                        value={form.year}
+                        onChange={(e) => updateField('year', e.target.value)}
+                        placeholder="2015"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-grid">
+                    <div className="form-field">
+                      <label htmlFor="service">
+                        {lang === 'hr' ? 'Usluga' : 'Service'}
+                      </label>
+                      <select
+                        id="service"
+                        value={form.service}
+                        onChange={(e) => updateField('service', e.target.value)}
+                      >
+                        <option value="">
+                          {lang === 'hr'
+                            ? 'Odaberite uslugu (opcionalno)'
+                            : 'Choose a service (optional)'}
                         </option>
-                      ))}
-                    </select>
+                        {SERVICE_OPTIONS.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-field">
+                      <label htmlFor="preferredDate">
+                        {lang === 'hr' ? 'Željeni termin' : 'Preferred date/time'}
+                      </label>
+                      <input
+                        id="preferredDate"
+                        type="text"
+                        value={form.preferredDate}
+                        onChange={(e) => updateField('preferredDate', e.target.value)}
+                        placeholder={
+                          lang === 'hr' ? 'npr. idući tjedan ujutro' : 'e.g. next week, morning'
+                        }
+                      />
+                    </div>
                   </div>
                   <div className="form-field">
                     <label htmlFor="message">
@@ -599,9 +698,38 @@ function App() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </Reveal>
+            <div className="map-actions">
+              <a
+                className="btn btn-outline"
+                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(content.contact.mapQuery)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Icon name="pin" />
+                {lang === 'hr' ? 'Otvori u Google mapama' : 'Open in Google Maps'}
+              </a>
+              <a
+                className="btn btn-outline"
+                href={`https://waze.com/ul?q=${encodeURIComponent(content.contact.mapQuery)}&navigate=yes`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Icon name="pin" />
+                {lang === 'hr' ? 'Otvori u Wazeu' : 'Open in Waze'}
+              </a>
+            </div>
           </div>
         </section>
       </main>
+
+      <a
+        className="sticky-call-bar"
+        href={content.contact.phoneHref}
+        aria-label={lang === 'hr' ? 'Nazovi nas' : 'Call us'}
+      >
+        <Icon name="phone" />
+        {lang === 'hr' ? 'Nazovi' : 'Call'} {content.contact.phone}
+      </a>
 
       <div className="hazard-strip" aria-hidden="true" />
       <footer className="site-footer">

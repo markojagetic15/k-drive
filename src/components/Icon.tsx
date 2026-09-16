@@ -114,6 +114,9 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
   ),
   menu: <path d="M4 6.5h16M4 12h16M4 17.5h16" />,
   close: <path d="M5 5l14 14M19 5 5 19" />,
+  star: (
+    <path d="m12 3 2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 16.9l-5.6 3.2 1.4-6.3-4.8-4.3 6.4-.6L12 3Z" />
+  ),
 }
 
 // eslint-disable-next-line react-refresh/only-export-components -- small data export alongside the Icon component; only affects fast-refresh granularity in dev.

@@ -86,6 +86,31 @@ async function migrateLocalUploadsToR2() {
   console.log('[db] Content updated with R2 URLs.')
 }
 
+// Content stored before a new top-level section was introduced (e.g. the
+// "reviews" trust widget) won't have that key, and the frontend expects
+// every SiteContent field to exist - back-fill anything missing from the
+// seed defaults so old rows keep working after a deploy.
+async function backfillMissingContentFields() {
+  const { rows } = await pool.query('SELECT data FROM content WHERE id = 1')
+  if (rows.length === 0) return
+
+  const stored = JSON.parse(rows[0].data)
+  const seedPath = path.join(__dirname, '..', 'content.seed.json')
+  const seed = JSON.parse(readFileSync(seedPath, 'utf-8'))
+
+  const missingKeys = Object.keys(seed).filter((key) => !(key in stored))
+  if (missingKeys.length === 0) return
+
+  const merged = { ...stored }
+  for (const key of missingKeys) merged[key] = seed[key]
+
+  await pool.query('UPDATE content SET data = $1, updated_at = $2 WHERE id = 1', [
+    JSON.stringify(merged),
+    Date.now(),
+  ])
+  console.log(`[db] Back-filled missing content fields: ${missingKeys.join(', ')}`)
+}
+
 function mimeFromExt(ext) {
   const map = {
     '.jpg': 'image/jpeg',
@@ -135,6 +160,10 @@ async function init() {
 
   await migrateLocalUploadsToR2().catch((err) =>
     console.error('[db] R2 migration error:', err.message),
+  )
+
+  await backfillMissingContentFields().catch((err) =>
+    console.error('[db] Content backfill error:', err.message),
   )
 
   const { rows: adminRows } = await pool.query('SELECT id FROM admin WHERE id = 1')

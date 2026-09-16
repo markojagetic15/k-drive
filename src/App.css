@@ -413,6 +413,26 @@
   color: var(--muted);
 }
 
+.hero-quick-info {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.hero-quick-info span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-quick-info .icon {
+  width: 17px;
+  height: 17px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
 .hero-visual {
   position: relative;
   display: flex;
@@ -538,6 +558,43 @@
   .brands-row span {
     font-size: 16px;
   }
+}
+
+/* Reviews / trust strip */
+.reviews-strip {
+  padding: 36px 0;
+  border-bottom: 1px solid var(--border);
+}
+.reviews-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.reviews-stars {
+  display: flex;
+  gap: 3px;
+  color: var(--accent);
+}
+.reviews-stars .icon {
+  width: 18px;
+  height: 18px;
+}
+.reviews-rating {
+  font-size: 15px;
+  color: var(--text-strong);
+}
+.reviews-link {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--accent-dark);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+.reviews-link:hover {
+  color: var(--accent);
 }
 
 /* Highlights (About) */
@@ -704,6 +761,25 @@
 .service-card p {
   font-size: 14.5px;
   color: var(--text);
+}
+.service-cta {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 12px;
+  border: none;
+  background: none;
+  font: inherit;
+  font-family: var(--display);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent-dark);
+  cursor: pointer;
+}
+.service-cta:hover {
+  color: var(--accent);
+  text-decoration: underline;
 }
 
 @media (max-width: 980px) {
@@ -1037,6 +1113,13 @@
   border: 0;
   display: block;
 }
+.map-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
 
 @media (max-width: 900px) {
   .contact-inner {
@@ -1051,6 +1134,41 @@
 @media (max-width: 560px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Sticky mobile call bar */
+.sticky-call-bar {
+  display: none;
+}
+@media (max-width: 640px) {
+  .sticky-call-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    height: 56px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+  }
+  .sticky-call-bar .icon {
+    width: 18px;
+    height: 18px;
+  }
+  .site-footer {
+    padding-bottom: 76px;
   }
 }
 

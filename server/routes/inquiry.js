@@ -8,7 +8,8 @@ const isRateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 })
 const router = Router()
 
 router.post('/', async (req, res) => {
-  const { name, contact, service, message, website } = req.body ?? {}
+  const { name, contact, vehicle, year, service, preferredDate, message, website } =
+    req.body ?? {}
 
   // Honeypot field: hidden from real visitors via CSS, bots that fill in
   // every input trip it. Respond as if it succeeded so bots don't learn.
@@ -39,7 +40,10 @@ router.post('/', async (req, res) => {
       to: content.contact.email,
       name: name.trim(),
       contact: contact.trim(),
+      vehicle: typeof vehicle === 'string' ? vehicle.trim() : '',
+      year: typeof year === 'string' ? year.trim() : '',
       service: typeof service === 'string' ? service.trim() : '',
+      preferredDate: typeof preferredDate === 'string' ? preferredDate.trim() : '',
       message: message.trim(),
     })
     res.json({ ok: true })

@@ -43,6 +43,11 @@
     "label": { "hr": "Servisiramo sve marke vozila, uključujući", "en": "We service all vehicle makes, including" },
     "items": ["BMW", "Mercedes-Benz", "Volkswagen", "Audi", "Škoda", "Renault", "Peugeot", "Opel", "Ford", "Fiat"]
   },
+  "reviews": {
+    "rating": "",
+    "count": "",
+    "url": "https://www.google.com/maps/search/?api=1&query=K-Drive+Autoservis+Dugo+Selo"
+  },
   "about": {
     "eyebrow": { "hr": "O nama", "en": "About us" },
     "title": { "hr": "Rješenja, ne samo popravci", "en": "Solutions, not just repairs" },
