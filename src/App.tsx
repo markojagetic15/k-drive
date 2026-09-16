@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent, type MouseEvent } from 'react'
+import { Link } from 'react-router-dom'
 import './App.css'
 import { Icon } from './components/Icon'
 import { WrenchMotif } from './components/Decor'
@@ -931,7 +932,12 @@ function App() {
             © {new Date().getFullYear()} K-Drive Autoservis.{' '}
             {lang === 'hr' ? 'Sva prava pridržana.' : 'All rights reserved.'}
           </span>
-          <span>{lang === 'hr' ? 'Dugo Selo, Hrvatska' : 'Dugo Selo, Croatia'}</span>
+          <span className="footer-bottom-right">
+            <Link to="/privatnost">
+              {lang === 'hr' ? 'Politika privatnosti' : 'Privacy policy'}
+            </Link>
+            <span>{lang === 'hr' ? 'Dugo Selo, Hrvatska' : 'Dugo Selo, Croatia'}</span>
+          </span>
         </div>
       </footer>
     </>
