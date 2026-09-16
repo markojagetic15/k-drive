@@ -19,6 +19,12 @@ export async function sendInquiryEmail({ to, name, contact, service, message }) 
       'Slanje emaila nije podešeno na serveru (nedostaju SMTP_HOST/SMTP_USER/SMTP_PASS u .env).',
     )
   }
+  if (!process.env.MAIL_FROM) {
+    // Providers like Resend authenticate with a fixed username ("resend")
+    // that isn't a valid sender address, so silently falling back to
+    // SMTP_USER here would produce a broken "From" header.
+    throw new Error('MAIL_FROM nije postavljen u .env (potrebna je verificirana adresa/domena).')
+  }
 
   const subject = `Novi upit s web stranice${service ? ` - ${service}` : ''}`
   const text = [
@@ -32,7 +38,7 @@ export async function sendInquiryEmail({ to, name, contact, service, message }) 
     .join('\n')
 
   await transporter.sendMail({
-    from: process.env.MAIL_FROM || process.env.SMTP_USER,
+    from: process.env.MAIL_FROM,
     to,
     replyTo: contact.includes('@') ? contact : undefined,
     subject,
