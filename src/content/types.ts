@@ -70,6 +70,17 @@ export type ValueItem = {
   desc: Localized
 }
 
+export type TuningModel = {
+  id: string
+  name: string
+  baseHp: number
+  baseNm: number
+  stage1Hp: number
+  stage1Nm: number
+  stage2Hp: number
+  stage2Nm: number
+}
+
 export type SiteContent = {
   contact: {
     phone: string
@@ -103,6 +114,27 @@ export type SiteContent = {
     rating: string
     count: string
     url: string
+  }
+  schedule: {
+    days: number[]
+    open: string
+    close: string
+  }
+  tuning: {
+    eyebrow: Localized
+    title: Localized
+    lead: Localized
+    disclaimer: Localized
+    models: TuningModel[]
+  }
+  beforeAfter: {
+    eyebrow: Localized
+    title: Localized
+    lead: Localized
+    beforeLabel: Localized
+    afterLabel: Localized
+    beforeImage: string
+    afterImage: string
   }
   about: {
     eyebrow: Localized

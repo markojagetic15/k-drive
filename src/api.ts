@@ -41,12 +41,11 @@ export function fetchMe() {
 
 export function sendInquiry(data: {
   name: string
-  contact: string
+  phone: string
   vehicle: string
-  year: string
-  service: string
   preferredDate: string
-  message: string
+  services: string[]
+  note: string
   website: string
 }) {
   return request<{ ok: true }>('/api/inquiry', {

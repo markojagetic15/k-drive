@@ -3,32 +3,55 @@ import './App.css'
 import { Icon } from './components/Icon'
 import { WrenchMotif } from './components/Decor'
 import { Reveal } from './components/Reveal'
+import { LiveStatus } from './components/LiveStatus'
+import { TuningCalculator } from './components/TuningCalculator'
+import { BeforeAfterSlider } from './components/BeforeAfterSlider'
 import { useContent } from './context/ContentContext'
 import { useLanguage } from './context/LanguageContext'
 import { useTheme } from './context/ThemeContext'
 import { sendInquiry } from './api'
 import type { IconName } from './content/types'
 
+const SERVICE_CHECKBOXES: { id: string; label: Record<'hr' | 'en', string> }[] = [
+  { id: 'mali-servis', label: { hr: 'Mali servis', en: 'Minor service' } },
+  { id: 'veliki-servis', label: { hr: 'Veliki servis', en: 'Major service' } },
+  { id: 'dijagnostika', label: { hr: 'Dijagnostika', en: 'Diagnostics' } },
+  { id: 'tuning', label: { hr: 'Tuning', en: 'Tuning' } },
+  { id: 'kocnice', label: { hr: 'Kočnice', en: 'Brakes' } },
+]
+
 type InquiryForm = {
   name: string
-  contact: string
+  phone: string
   vehicle: string
-  year: string
-  service: string
   preferredDate: string
-  message: string
+  services: string[]
+  note: string
   website: string
 }
 
 const EMPTY_FORM: InquiryForm = {
   name: '',
-  contact: '',
+  phone: '',
   vehicle: '',
-  year: '',
-  service: '',
   preferredDate: '',
-  message: '',
+  services: [],
+  note: '',
   website: '',
+}
+
+type HeroFilter = {
+  marka: string
+  model: string
+  godiste: string
+  kategorija: string
+}
+
+const EMPTY_HERO_FILTER: HeroFilter = {
+  marka: '',
+  model: '',
+  godiste: '',
+  kategorija: '',
 }
 
 type SubmitStatus = 'idle' | 'sending' | 'success' | 'error'
@@ -41,6 +64,7 @@ function App() {
   const [status, setStatus] = useState<SubmitStatus>('idle')
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [heroFilter, setHeroFilter] = useState<HeroFilter>(EMPTY_HERO_FILTER)
 
   function scrollToSection(event: MouseEvent<HTMLAnchorElement>, id: string) {
     event.preventDefault()
@@ -48,9 +72,57 @@ function App() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  function requestServiceQuote(serviceTitle: string) {
-    setForm((prev) => ({ ...prev, service: serviceTitle }))
+  function scrollToContact() {
     document.getElementById('kontakt')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  function requestServiceQuote(serviceTitle: string) {
+    setForm((prev) => ({
+      ...prev,
+      note: lang === 'hr' ? `Zanima me: ${serviceTitle}` : `Interested in: ${serviceTitle}`,
+    }))
+    scrollToContact()
+  }
+
+  function requestTuningQuote(modelName: string, stageLabel: string) {
+    setForm((prev) => ({
+      ...prev,
+      vehicle: modelName,
+      services: prev.services.includes('tuning')
+        ? prev.services
+        : [...prev.services, 'tuning'],
+      note:
+        lang === 'hr'
+          ? `Zanima me chip tuning (${stageLabel}) za ${modelName}`
+          : `Interested in chip tuning (${stageLabel}) for ${modelName}`,
+    }))
+    scrollToContact()
+  }
+
+  function toggleFormService(id: string) {
+    setForm((prev) => ({
+      ...prev,
+      services: prev.services.includes(id)
+        ? prev.services.filter((s) => s !== id)
+        : [...prev.services, id],
+    }))
+  }
+
+  function handleHeroFilterSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const vehicleParts = [heroFilter.marka, heroFilter.model, heroFilter.godiste]
+      .map((s) => s.trim())
+      .filter(Boolean)
+    setForm((prev) => ({
+      ...prev,
+      vehicle: vehicleParts.join(' ') || prev.vehicle,
+      note: heroFilter.kategorija
+        ? lang === 'hr'
+          ? `Zanima me: ${heroFilter.kategorija}`
+          : `Interested in: ${heroFilter.kategorija}`
+        : prev.note,
+    }))
+    scrollToContact()
   }
 
   useEffect(() => {
@@ -83,7 +155,10 @@ function App() {
     )
   }
 
-  function updateField<K extends keyof InquiryForm>(key: K, value: string) {
+  function updateField<K extends Exclude<keyof InquiryForm, 'services'>>(
+    key: K,
+    value: string,
+  ) {
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -109,10 +184,7 @@ function App() {
     { id: 'kontakt', href: '#kontakt', label: t(content.nav.kontakt) },
   ]
 
-  const SERVICE_OPTIONS = [
-    ...content.services.items.map((s) => t(s.title)),
-    lang === 'hr' ? 'Ostalo' : 'Other',
-  ]
+  const KATEGORIJA_OPTIONS = content.services.items.map((s) => t(s.title))
 
   return (
     <>
@@ -145,6 +217,7 @@ function App() {
                 {link.label}
               </a>
             ))}
+            <LiveStatus schedule={content.schedule} className="header-live-status" />
           </nav>
           <div className="header-actions">
             <button
@@ -173,12 +246,9 @@ function App() {
             >
               <Icon name={theme === 'light' ? 'moon' : 'sun'} className="icon" />
             </button>
-            <a
-              className="btn btn-primary"
-              href="#kontakt"
-              onClick={(e) => scrollToSection(e, 'kontakt')}
-            >
-              {lang === 'hr' ? 'Zatraži ponudu' : 'Get a quote'}
+            <a className="btn btn-emergency" href={content.contact.phoneHref}>
+              <Icon name="phone" />
+              {lang === 'hr' ? 'HITNI POZIV' : 'EMERGENCY CALL'}
             </a>
             <button
               type="button"
@@ -221,6 +291,7 @@ function App() {
               <Icon name="phone" />
               {content.contact.phone}
             </a>
+            <LiveStatus schedule={content.schedule} className="mobile-nav-live-status" />
           </nav>
         )}
         <div className="hazard-strip" aria-hidden="true" />
@@ -288,6 +359,68 @@ function App() {
                 </div>
               ))}
             </div>
+          </div>
+          <div className="container">
+            <form className="vehicle-filter" onSubmit={handleHeroFilterSubmit}>
+              <span className="vehicle-filter-label">
+                <Icon name="search" />
+                {lang === 'hr' ? 'Pronađite ponudu za svoje vozilo' : 'Find the offer for your vehicle'}
+              </span>
+              <div className="vehicle-filter-grid">
+                <select
+                  aria-label={lang === 'hr' ? 'Marka' : 'Make'}
+                  value={heroFilter.marka}
+                  onChange={(e) =>
+                    setHeroFilter((prev) => ({ ...prev, marka: e.target.value }))
+                  }
+                >
+                  <option value="">{lang === 'hr' ? 'Marka' : 'Make'}</option>
+                  {content.brands.items.map((brand) => (
+                    <option key={brand} value={brand}>
+                      {brand}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  placeholder={lang === 'hr' ? 'Model' : 'Model'}
+                  aria-label={lang === 'hr' ? 'Model' : 'Model'}
+                  value={heroFilter.model}
+                  onChange={(e) =>
+                    setHeroFilter((prev) => ({ ...prev, model: e.target.value }))
+                  }
+                />
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder={lang === 'hr' ? 'Godište' : 'Year'}
+                  aria-label={lang === 'hr' ? 'Godište' : 'Year'}
+                  value={heroFilter.godiste}
+                  onChange={(e) =>
+                    setHeroFilter((prev) => ({ ...prev, godiste: e.target.value }))
+                  }
+                />
+                <select
+                  aria-label={lang === 'hr' ? 'Kategorija usluge' : 'Service category'}
+                  value={heroFilter.kategorija}
+                  onChange={(e) =>
+                    setHeroFilter((prev) => ({ ...prev, kategorija: e.target.value }))
+                  }
+                >
+                  <option value="">
+                    {lang === 'hr' ? 'Kategorija usluge' : 'Service category'}
+                  </option>
+                  {KATEGORIJA_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit" className="btn btn-primary">
+                  {lang === 'hr' ? 'Pretraži' : 'Search'}
+                </button>
+              </div>
+            </form>
           </div>
         </section>
 
@@ -407,6 +540,21 @@ function App() {
           <div className="angled-divider" aria-hidden="true" />
         </section>
 
+        <section className="section tuning-section" id="tuning">
+          <div className="container">
+            <Reveal>
+              <TuningCalculator
+                eyebrow={content.tuning.eyebrow}
+                title={content.tuning.title}
+                lead={content.tuning.lead}
+                disclaimer={content.tuning.disclaimer}
+                models={content.tuning.models}
+                onRequestQuote={requestTuningQuote}
+              />
+            </Reveal>
+          </div>
+        </section>
+
         <section className="section values-strip">
           <div className="container">
             <div className="values-grid">
@@ -452,10 +600,28 @@ function App() {
           </div>
         </section>
 
+        <section className="section before-after-section">
+          <div className="container">
+            <Reveal className="section-head">
+              <span className="eyebrow">{t(content.beforeAfter.eyebrow)}</span>
+              <h2>{t(content.beforeAfter.title)}</h2>
+              <p>{t(content.beforeAfter.lead)}</p>
+            </Reveal>
+            <Reveal>
+              <BeforeAfterSlider
+                beforeImage={content.beforeAfter.beforeImage}
+                afterImage={content.beforeAfter.afterImage}
+                beforeLabel={t(content.beforeAfter.beforeLabel)}
+                afterLabel={t(content.beforeAfter.afterLabel)}
+              />
+            </Reveal>
+          </div>
+        </section>
+
         <section
           className="cta-banner"
           style={{
-            backgroundImage: `linear-gradient(135deg, rgba(15,23,42,0.93), rgba(30,41,59,0.9)), url(${content.cta.image})`,
+            backgroundImage: `linear-gradient(135deg, rgba(5,6,10,0.94), rgba(20,22,28,0.9)), url(${content.cta.image})`,
           }}
         >
           <div className="container cta-inner">
@@ -529,11 +695,13 @@ function App() {
               </Reveal>
 
               <Reveal className="contact-form-card" delay={100}>
-                <h3>{lang === 'hr' ? 'Pošaljite upit' : 'Send an inquiry'}</h3>
+                <h3>
+                  {lang === 'hr' ? 'Naruči vozilo na servis' : 'Book your vehicle for service'}
+                </h3>
                 <p className="form-intro">
                   {lang === 'hr'
-                    ? 'Ispunite formu i javit ćemo vam se u najkraćem roku.'
-                    : "Fill out the form and we'll get back to you shortly."}
+                    ? 'Ispunite obrazac i javit ćemo vam se za potvrdu termina.'
+                    : "Fill out the form and we'll contact you to confirm the appointment."}
                 </p>
                 <form className="contact-form" onSubmit={handleSubmit}>
                   <div className="form-grid">
@@ -551,17 +719,15 @@ function App() {
                       />
                     </div>
                     <div className="form-field">
-                      <label htmlFor="contact">
-                        {lang === 'hr' ? 'Telefon ili email' : 'Phone or email'}
+                      <label htmlFor="phone">
+                        {lang === 'hr' ? 'Broj telefona' : 'Phone number'}
                       </label>
                       <input
-                        id="contact"
-                        type="text"
+                        id="phone"
+                        type="tel"
                         required
-                        value={form.contact}
-                        onChange={(e) =>
-                          updateField('contact', e.target.value)
-                        }
+                        value={form.phone}
+                        onChange={(e) => updateField('phone', e.target.value)}
                         placeholder="091 234 5678"
                       />
                     </div>
@@ -569,82 +735,60 @@ function App() {
                   <div className="form-grid">
                     <div className="form-field">
                       <label htmlFor="vehicle">
-                        {lang === 'hr' ? 'Marka i model vozila' : 'Vehicle make and model'}
+                        {lang === 'hr'
+                          ? 'Registracija / Marka i model vozila'
+                          : 'Plate / Vehicle make and model'}
                       </label>
                       <input
                         id="vehicle"
                         type="text"
+                        required
                         value={form.vehicle}
                         onChange={(e) => updateField('vehicle', e.target.value)}
-                        placeholder={lang === 'hr' ? 'npr. VW Golf 5' : 'e.g. VW Golf 5'}
+                        placeholder={lang === 'hr' ? 'npr. ZG 1234-AB / VW Golf 7' : 'e.g. VW Golf 7'}
                       />
-                    </div>
-                    <div className="form-field">
-                      <label htmlFor="year">
-                        {lang === 'hr' ? 'Godište' : 'Year'}
-                      </label>
-                      <input
-                        id="year"
-                        type="text"
-                        inputMode="numeric"
-                        value={form.year}
-                        onChange={(e) => updateField('year', e.target.value)}
-                        placeholder="2015"
-                      />
-                    </div>
-                  </div>
-                  <div className="form-grid">
-                    <div className="form-field">
-                      <label htmlFor="service">
-                        {lang === 'hr' ? 'Usluga' : 'Service'}
-                      </label>
-                      <select
-                        id="service"
-                        value={form.service}
-                        onChange={(e) => updateField('service', e.target.value)}
-                      >
-                        <option value="">
-                          {lang === 'hr'
-                            ? 'Odaberite uslugu (opcionalno)'
-                            : 'Choose a service (optional)'}
-                        </option>
-                        {SERVICE_OPTIONS.map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
                     </div>
                     <div className="form-field">
                       <label htmlFor="preferredDate">
-                        {lang === 'hr' ? 'Željeni termin' : 'Preferred date/time'}
+                        {lang === 'hr' ? 'Željeni datum' : 'Preferred date'}
                       </label>
                       <input
                         id="preferredDate"
-                        type="text"
+                        type="date"
                         value={form.preferredDate}
                         onChange={(e) => updateField('preferredDate', e.target.value)}
-                        placeholder={
-                          lang === 'hr' ? 'npr. idući tjedan ujutro' : 'e.g. next week, morning'
-                        }
                       />
                     </div>
                   </div>
                   <div className="form-field">
-                    <label htmlFor="message">
-                      {lang === 'hr' ? 'Poruka' : 'Message'}
+                    <span className="form-field-label-standalone">
+                      {lang === 'hr' ? 'Odaberite uslugu/e' : 'Select service(s)'}
+                    </span>
+                    <div className="checkbox-grid">
+                      {SERVICE_CHECKBOXES.map((option) => (
+                        <label className="checkbox-item" key={option.id}>
+                          <input
+                            type="checkbox"
+                            checked={form.services.includes(option.id)}
+                            onChange={() => toggleFormService(option.id)}
+                          />
+                          {option.label[lang]}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="form-field">
+                    <label htmlFor="note">
+                      {lang === 'hr' ? 'Napomena (opcionalno)' : 'Note (optional)'}
                     </label>
                     <textarea
-                      id="message"
-                      required
-                      value={form.message}
-                      onChange={(e) =>
-                        updateField('message', e.target.value)
-                      }
+                      id="note"
+                      value={form.note}
+                      onChange={(e) => updateField('note', e.target.value)}
                       placeholder={
                         lang === 'hr'
-                          ? 'Opišite kvar ili uslugu koja vas zanima...'
-                          : 'Describe the issue or service you need...'
+                          ? 'Opišite kvar ili dodatne detalje...'
+                          : 'Describe the issue or any extra details...'
                       }
                     />
                   </div>

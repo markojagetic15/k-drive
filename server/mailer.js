@@ -1,5 +1,17 @@
 import nodemailer from 'nodemailer'
 
+// Kept in sync with SERVICE_CHECKBOXES in src/App.tsx - the form sends
+// stable ids so the checkbox state doesn't break if the visitor switches
+// site language mid-fill; the email itself is always read by the (Croatian)
+// shop owner, so we label the ids in Croatian here.
+const SERVICE_LABELS = {
+  'mali-servis': 'Mali servis',
+  'veliki-servis': 'Veliki servis',
+  dijagnostika: 'Dijagnostika',
+  tuning: 'Tuning',
+  kocnice: 'Kočnice',
+}
+
 function getTransporter() {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null
@@ -15,12 +27,11 @@ function getTransporter() {
 export async function sendInquiryEmail({
   to,
   name,
-  contact,
+  phone,
   vehicle,
-  year,
-  service,
   preferredDate,
-  message,
+  services,
+  note,
 }) {
   const transporter = getTransporter()
   if (!transporter) {
@@ -35,15 +46,16 @@ export async function sendInquiryEmail({
     throw new Error('MAIL_FROM nije postavljen u .env (potrebna je verificirana adresa/domena).')
   }
 
-  const subject = `Novi upit s web stranice${service ? ` - ${service}` : ''}`
+  const serviceLabels = (services ?? []).map((id) => SERVICE_LABELS[id] ?? id)
+  const subject = `Nova narudžba servisa - ${vehicle}`
   const text = [
     `Ime i prezime: ${name}`,
-    `Kontakt: ${contact}`,
-    vehicle ? `Vozilo: ${vehicle}${year ? ` (${year})` : ''}` : null,
-    service ? `Usluga: ${service}` : null,
-    preferredDate ? `Željeni termin: ${preferredDate}` : null,
-    '',
-    message,
+    `Telefon: ${phone}`,
+    `Vozilo: ${vehicle}`,
+    preferredDate ? `Željeni datum: ${preferredDate}` : null,
+    serviceLabels.length ? `Usluge: ${serviceLabels.join(', ')}` : null,
+    note ? '' : null,
+    note || null,
   ]
     .filter((line) => line !== null)
     .join('\n')
@@ -51,7 +63,6 @@ export async function sendInquiryEmail({
   await transporter.sendMail({
     from: process.env.MAIL_FROM,
     to,
-    replyTo: contact.includes('@') ? contact : undefined,
     subject,
     text,
   })

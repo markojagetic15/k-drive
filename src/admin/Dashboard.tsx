@@ -5,6 +5,7 @@ import type {
   ServiceItem,
   SiteContent,
   StatItem,
+  TuningModel,
   ValueItem,
 } from '../content/types'
 import { fetchContent, logout, saveContent } from '../api'
@@ -19,8 +20,19 @@ const TABS = [
   { id: 'onama', label: 'O nama' },
   { id: 'usluge', label: 'Usluge' },
   { id: 'proces', label: 'Proces' },
+  { id: 'tuning', label: 'Tuning i radovi' },
   { id: 'ostalo', label: 'CTA i footer' },
 ] as const
+
+const WEEKDAYS = [
+  { value: 1, label: 'Pon' },
+  { value: 2, label: 'Uto' },
+  { value: 3, label: 'Sri' },
+  { value: 4, label: 'Čet' },
+  { value: 5, label: 'Pet' },
+  { value: 6, label: 'Sub' },
+  { value: 0, label: 'Ned' },
+]
 
 type TabId = (typeof TABS)[number]['id']
 
@@ -163,6 +175,52 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
     })
   }
 
+  function updateTuningModel(index: number, patch: Partial<TuningModel>) {
+    setDraft((prev) => {
+      if (!prev) return prev
+      const models = [...prev.tuning.models]
+      models[index] = { ...models[index], ...patch }
+      return { ...prev, tuning: { ...prev.tuning, models } }
+    })
+  }
+
+  function addTuningModel() {
+    setDraft((prev) => {
+      if (!prev) return prev
+      const model: TuningModel = {
+        id: crypto.randomUUID(),
+        name: '',
+        baseHp: 0,
+        baseNm: 0,
+        stage1Hp: 0,
+        stage1Nm: 0,
+        stage2Hp: 0,
+        stage2Nm: 0,
+      }
+      return { ...prev, tuning: { ...prev.tuning, models: [...prev.tuning.models, model] } }
+    })
+  }
+
+  function removeTuningModel(index: number) {
+    setDraft((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        tuning: { ...prev.tuning, models: prev.tuning.models.filter((_, i) => i !== index) },
+      }
+    })
+  }
+
+  function toggleScheduleDay(day: number) {
+    setDraft((prev) => {
+      if (!prev) return prev
+      const days = prev.schedule.days.includes(day)
+        ? prev.schedule.days.filter((d) => d !== day)
+        : [...prev.schedule.days, day].sort()
+      return { ...prev, schedule: { ...prev.schedule, days } }
+    })
+  }
+
   return (
     <div className="admin-shell">
       <header className="admin-header">
@@ -282,12 +340,61 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                 </div>
               </div>
               <LocalizedField
-                label="Radno vrijeme"
+                label="Radno vrijeme (prikazani tekst)"
                 value={draft.contact.hours}
                 onChange={(hours) =>
                   setDraft({ ...draft, contact: { ...draft.contact, hours } })
                 }
               />
+
+              <h3>Live status (Otvoreno / Zatvoreno u headeru)</h3>
+              <p className="field-hint">
+                Ovo pokreće "RADIONICA OTVORENA" / "ZATVORENO" indikator - odaberite
+                stvarne dane i sate rada.
+              </p>
+              <div className="weekday-picker">
+                {WEEKDAYS.map((day) => (
+                  <label
+                    key={day.value}
+                    className={`weekday-chip${draft.schedule.days.includes(day.value) ? ' active' : ''}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={draft.schedule.days.includes(day.value)}
+                      onChange={() => toggleScheduleDay(day.value)}
+                    />
+                    {day.label}
+                  </label>
+                ))}
+              </div>
+              <div className="field-grid">
+                <div className="field">
+                  <span className="field-label">Otvara u</span>
+                  <input
+                    type="time"
+                    value={draft.schedule.open}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        schedule: { ...draft.schedule, open: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+                <div className="field">
+                  <span className="field-label">Zatvara u</span>
+                  <input
+                    type="time"
+                    value={draft.schedule.close}
+                    onChange={(e) =>
+                      setDraft({
+                        ...draft,
+                        schedule: { ...draft.schedule, close: e.target.value },
+                      })
+                    }
+                  />
+                </div>
+              </div>
             </section>
           )}
 
@@ -774,6 +881,171 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                   />
                 </div>
               ))}
+            </section>
+          )}
+
+          {tab === 'tuning' && (
+            <section className="admin-section">
+              <h2>Tuning kalkulator</h2>
+              <LocalizedField
+                label="Oznaka iznad naslova"
+                value={draft.tuning.eyebrow}
+                onChange={(eyebrow) =>
+                  setDraft({ ...draft, tuning: { ...draft.tuning, eyebrow } })
+                }
+              />
+              <LocalizedField
+                label="Naslov"
+                value={draft.tuning.title}
+                onChange={(title) =>
+                  setDraft({ ...draft, tuning: { ...draft.tuning, title } })
+                }
+              />
+              <LocalizedField
+                label="Opis"
+                value={draft.tuning.lead}
+                multiline
+                onChange={(lead) =>
+                  setDraft({ ...draft, tuning: { ...draft.tuning, lead } })
+                }
+              />
+              <LocalizedField
+                label="Napomena o procjenama"
+                value={draft.tuning.disclaimer}
+                multiline
+                onChange={(disclaimer) =>
+                  setDraft({ ...draft, tuning: { ...draft.tuning, disclaimer } })
+                }
+              />
+
+              <h3>Modeli vozila</h3>
+              {draft.tuning.models.map((model, index) => (
+                <div className="array-item" key={model.id}>
+                  <div className="field">
+                    <span className="field-label">Naziv modela</span>
+                    <input
+                      value={model.name}
+                      onChange={(e) => updateTuningModel(index, { name: e.target.value })}
+                      placeholder="npr. VW Golf 7 2.0 TDI (110kW)"
+                    />
+                  </div>
+                  <div className="field-grid">
+                    <div className="field">
+                      <span className="field-label">Serijski KS</span>
+                      <input
+                        type="number"
+                        value={model.baseHp}
+                        onChange={(e) =>
+                          updateTuningModel(index, { baseHp: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="field">
+                      <span className="field-label">Serijski Nm</span>
+                      <input
+                        type="number"
+                        value={model.baseNm}
+                        onChange={(e) =>
+                          updateTuningModel(index, { baseNm: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="field">
+                      <span className="field-label">Stage 1 KS</span>
+                      <input
+                        type="number"
+                        value={model.stage1Hp}
+                        onChange={(e) =>
+                          updateTuningModel(index, { stage1Hp: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="field">
+                      <span className="field-label">Stage 1 Nm</span>
+                      <input
+                        type="number"
+                        value={model.stage1Nm}
+                        onChange={(e) =>
+                          updateTuningModel(index, { stage1Nm: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="field">
+                      <span className="field-label">Stage 2 KS</span>
+                      <input
+                        type="number"
+                        value={model.stage2Hp}
+                        onChange={(e) =>
+                          updateTuningModel(index, { stage2Hp: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="field">
+                      <span className="field-label">Stage 2 Nm</span>
+                      <input
+                        type="number"
+                        value={model.stage2Nm}
+                        onChange={(e) =>
+                          updateTuningModel(index, { stage2Nm: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-danger"
+                    onClick={() => removeTuningModel(index)}
+                  >
+                    Ukloni
+                  </button>
+                </div>
+              ))}
+              <button type="button" className="btn btn-outline" onClick={addTuningModel}>
+                + Dodaj model
+              </button>
+
+              <h2>Prije / Poslije</h2>
+              <p className="field-hint">
+                Zamijenite primjer fotografije stvarnim fotografijama radova čim ih
+                dobijete.
+              </p>
+              <LocalizedField
+                label="Naslov"
+                value={draft.beforeAfter.title}
+                onChange={(title) =>
+                  setDraft({ ...draft, beforeAfter: { ...draft.beforeAfter, title } })
+                }
+              />
+              <LocalizedField
+                label="Opis"
+                value={draft.beforeAfter.lead}
+                multiline
+                onChange={(lead) =>
+                  setDraft({ ...draft, beforeAfter: { ...draft.beforeAfter, lead } })
+                }
+              />
+              <div className="field-grid">
+                <ImageUploader
+                  label="Slika PRIJE"
+                  value={draft.beforeAfter.beforeImage}
+                  onChange={(beforeImage) =>
+                    persist({
+                      ...draft,
+                      beforeAfter: { ...draft.beforeAfter, beforeImage },
+                    })
+                  }
+                />
+                <ImageUploader
+                  label="Slika POSLIJE"
+                  value={draft.beforeAfter.afterImage}
+                  onChange={(afterImage) =>
+                    persist({
+                      ...draft,
+                      beforeAfter: { ...draft.beforeAfter, afterImage },
+                    })
+                  }
+                />
+              </div>
             </section>
           )}
 

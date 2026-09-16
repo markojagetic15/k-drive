@@ -8,8 +8,7 @@ const isRateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 })
 const router = Router()
 
 router.post('/', async (req, res) => {
-  const { name, contact, vehicle, year, service, preferredDate, message, website } =
-    req.body ?? {}
+  const { name, phone, vehicle, preferredDate, services, note, website } = req.body ?? {}
 
   // Honeypot field: hidden from real visitors via CSS, bots that fill in
   // every input trip it. Respond as if it succeeded so bots don't learn.
@@ -20,12 +19,14 @@ router.post('/', async (req, res) => {
   if (
     typeof name !== 'string' ||
     !name.trim() ||
-    typeof contact !== 'string' ||
-    !contact.trim() ||
-    typeof message !== 'string' ||
-    !message.trim()
+    typeof phone !== 'string' ||
+    !phone.trim() ||
+    typeof vehicle !== 'string' ||
+    !vehicle.trim()
   ) {
-    return res.status(400).json({ error: 'Ime, kontakt i poruka su obavezni.' })
+    return res
+      .status(400)
+      .json({ error: 'Ime, telefon i vozilo su obavezni.' })
   }
 
   if (isRateLimited(req.ip)) {
@@ -39,12 +40,11 @@ router.post('/', async (req, res) => {
     await sendInquiryEmail({
       to: content.contact.email,
       name: name.trim(),
-      contact: contact.trim(),
-      vehicle: typeof vehicle === 'string' ? vehicle.trim() : '',
-      year: typeof year === 'string' ? year.trim() : '',
-      service: typeof service === 'string' ? service.trim() : '',
+      phone: phone.trim(),
+      vehicle: vehicle.trim(),
       preferredDate: typeof preferredDate === 'string' ? preferredDate.trim() : '',
-      message: message.trim(),
+      services: Array.isArray(services) ? services.filter((s) => typeof s === 'string') : [],
+      note: typeof note === 'string' ? note.trim() : '',
     })
     res.json({ ok: true })
   } catch (err) {

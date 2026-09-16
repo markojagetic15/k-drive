@@ -18,7 +18,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null)
 function getInitialTheme(storageKey: string): Theme {
   const stored = localStorage.getItem(storageKey)
   if (stored === 'light' || stored === 'dark') return stored
-  return 'light'
+  return 'dark'
 }
 
 export function ThemeProvider({

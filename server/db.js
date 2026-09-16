@@ -158,12 +158,14 @@ async function init() {
     console.log('[db] Seeded content from content.seed.json')
   }
 
-  await migrateLocalUploadsToR2().catch((err) =>
-    console.error('[db] R2 migration error:', err.message),
-  )
-
+  // Backfill first: a newly added content field may itself contain fresh
+  // /uploads/ seed-asset paths that still need migrating to R2 below.
   await backfillMissingContentFields().catch((err) =>
     console.error('[db] Content backfill error:', err.message),
+  )
+
+  await migrateLocalUploadsToR2().catch((err) =>
+    console.error('[db] R2 migration error:', err.message),
   )
 
   const { rows: adminRows } = await pool.query('SELECT id FROM admin WHERE id = 1')

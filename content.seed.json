@@ -4,8 +4,8 @@
     "phoneHref": "tel:+385917236657",
     "address": "Podolje 1, 10370 Dugo Selo",
     "hours": {
-      "hr": "Pon - Pet: 9:00 - 17:00h",
-      "en": "Mon - Fri: 9:00 AM - 5:00 PM"
+      "hr": "Pon - Pet: 8:00 - 17:00h",
+      "en": "Mon - Fri: 8:00 AM - 5:00 PM"
     },
     "mapQuery": "Podolje 1, 10370 Dugo Selo",
     "email": "marko.jagetic3@gmail.com"
@@ -47,6 +47,65 @@
     "rating": "",
     "count": "",
     "url": "https://www.google.com/maps/search/?api=1&query=K-Drive+Autoservis+Dugo+Selo"
+  },
+  "schedule": {
+    "days": [1, 2, 3, 4, 5],
+    "open": "08:00",
+    "close": "17:00"
+  },
+  "tuning": {
+    "eyebrow": { "hr": "Chip tuning", "en": "Chip tuning" },
+    "title": { "hr": "Kalkulator snage", "en": "Power calculator" },
+    "lead": {
+      "hr": "Odaberite model vozila i fazu chip tuninga da vidite orijentacijski dobitak na snazi i momentu.",
+      "en": "Choose your vehicle model and tuning stage to see the estimated power and torque gain."
+    },
+    "disclaimer": {
+      "hr": "Orijentacijske procjene temeljene na tipičnim rezultatima za ovu klasu motora. Stvarni rezultat ovisi o stanju i opremljenosti vozila - potvrđujemo točne brojke nakon pregleda na dijagnostici.",
+      "en": "Indicative estimates based on typical results for this engine class. Actual results depend on the vehicle's condition and equipment - we confirm exact figures after a diagnostic check."
+    },
+    "models": [
+      {
+        "id": "golf7-20tdi",
+        "name": "VW Golf 7 2.0 TDI (110kW)",
+        "baseHp": 150, "baseNm": 340,
+        "stage1Hp": 190, "stage1Nm": 400,
+        "stage2Hp": 220, "stage2Nm": 450
+      },
+      {
+        "id": "bmw-320d-f30",
+        "name": "BMW 320d (F30)",
+        "baseHp": 190, "baseNm": 400,
+        "stage1Hp": 230, "stage1Nm": 450,
+        "stage2Hp": 260, "stage2Nm": 500
+      },
+      {
+        "id": "audi-a4-20tdi",
+        "name": "Audi A4 2.0 TDI (110kW)",
+        "baseHp": 150, "baseNm": 320,
+        "stage1Hp": 190, "stage1Nm": 380,
+        "stage2Hp": 210, "stage2Nm": 420
+      },
+      {
+        "id": "octavia-20tdi",
+        "name": "Škoda Octavia 2.0 TDI (110kW)",
+        "baseHp": 150, "baseNm": 340,
+        "stage1Hp": 188, "stage1Nm": 400,
+        "stage2Hp": 218, "stage2Nm": 440
+      }
+    ]
+  },
+  "beforeAfter": {
+    "eyebrow": { "hr": "Naši radovi", "en": "Our work" },
+    "title": { "hr": "Prije i poslije", "en": "Before and after" },
+    "lead": {
+      "hr": "Povucite razdjelnik za usporedbu. Prikaz je primjer dok ne dodamo stvarne fotografije radova.",
+      "en": "Drag the slider to compare. This is a placeholder example until real project photos are added."
+    },
+    "beforeLabel": { "hr": "PRIJE (primjer)", "en": "BEFORE (example)" },
+    "afterLabel": { "hr": "POSLIJE (primjer)", "en": "AFTER (example)" },
+    "beforeImage": "/uploads/car-lift.jpg",
+    "afterImage": "/uploads/machine-detail.jpg"
   },
   "about": {
     "eyebrow": { "hr": "O nama", "en": "About us" },
