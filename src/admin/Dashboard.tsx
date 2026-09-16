@@ -682,31 +682,9 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                 }
               />
 
-              <h3>Prednosti (kartice)</h3>
+              <h3>Prednosti (numerirani popis)</h3>
               {draft.highlights.map((item, index) => (
                 <div className="array-item" key={item.id}>
-                  <div className="field-grid">
-                    <div className="field">
-                      <span className="field-label">Ikona</span>
-                      <div className="icon-select">
-                        <Icon name={item.icon} />
-                        <select
-                          value={item.icon}
-                          onChange={(e) =>
-                            updateHighlight(index, {
-                              icon: e.target.value as HighlightItem['icon'],
-                            })
-                          }
-                        >
-                          {ICON_NAMES.map((name) => (
-                            <option key={name} value={name}>
-                              {name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
                   <LocalizedField
                     label="Naslov"
                     value={item.title}
