@@ -44,6 +44,10 @@
   font-size: 13.5px;
   color: #dc2626;
 }
+.admin-success {
+  font-size: 13.5px;
+  color: #16a34a;
+}
 .admin-status {
   font-size: 13.5px;
   color: var(--text);
@@ -96,6 +100,11 @@
   padding: 20px 12px;
   border-right: 1px solid var(--border);
   background: var(--surface);
+  position: sticky;
+  top: 64px;
+  align-self: start;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
 }
 .admin-tab {
   text-align: left;
@@ -215,6 +224,52 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.password-field {
+  position: relative;
+  display: flex;
+}
+.password-field input {
+  width: 100%;
+  padding-right: 42px;
+}
+.password-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--muted);
+  padding: 0;
+}
+.password-toggle:hover {
+  color: var(--text-strong);
+}
+.password-toggle .icon {
+  width: 19px;
+  height: 19px;
+}
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 360px;
+}
+
 .localized-field {
   display: flex;
   flex-direction: column;
@@ -313,8 +368,11 @@ textarea:focus {
   .admin-tabs {
     flex-direction: row;
     overflow-x: auto;
+    overflow-y: visible;
     border-right: none;
     border-bottom: 1px solid var(--border);
+    position: static;
+    height: auto;
   }
   .admin-panel {
     padding: 24px 20px 60px;

@@ -117,6 +117,20 @@ const ICON_PATHS: Record<IconName, ReactNode> = {
   star: (
     <path d="m12 3 2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L12 16.9l-5.6 3.2 1.4-6.3-4.8-4.3 6.4-.6L12 3Z" />
   ),
+  arrowUp: <path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" />,
+  eye: (
+    <>
+      <path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  eyeOff: (
+    <>
+      <path d="M3.5 3.5l17 17" />
+      <path d="M10.6 5.7A10.6 10.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a13.4 13.4 0 0 1-3.1 3.9M7.4 7.4C4.8 9 2.5 12 2.5 12s3.5 6.5 9.5 6.5a9.6 9.6 0 0 0 3.1-.5" />
+      <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+    </>
+  ),
 }
 
 // eslint-disable-next-line react-refresh/only-export-components -- small data export alongside the Icon component; only affects fast-refresh granularity in dev.

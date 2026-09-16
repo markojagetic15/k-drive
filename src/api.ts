@@ -39,6 +39,13 @@ export function fetchMe() {
   return request<{ authenticated: boolean }>('/api/auth/me')
 }
 
+export function changePassword(currentPassword: string, newPassword: string) {
+  return request<{ ok: true }>('/api/auth/password', {
+    method: 'POST',
+    body: JSON.stringify({ currentPassword, newPassword }),
+  })
+}
+
 export function sendInquiry(data: {
   name: string
   phone: string

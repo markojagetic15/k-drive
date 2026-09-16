@@ -67,6 +67,7 @@ function App() {
   const [status, setStatus] = useState<SubmitStatus>('idle')
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false)
   // const [heroFilter, setHeroFilter] = useState<HeroFilter>(EMPTY_HERO_FILTER)
   // const [highlightedService, setHighlightedService] = useState<string | null>(null)
 
@@ -120,6 +121,14 @@ function App() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [mobileNavOpen])
+
+  useEffect(() => {
+    function handleScroll() {
+      setShowScrollTop(window.scrollY > 800)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   if (loading) {
     return (
@@ -214,9 +223,9 @@ function App() {
             className="brand"
             onClick={(e) => scrollToSection(e, 'top')}
           >
-            <span className="brand-mark">KD</span>
+            <img className="brand-icon" src="/logo-mark-accent.png" alt="K-Drive" />
             <span className="brand-text">
-              <span className="brand-name">K-Drive</span>
+              <span className="brand-name">Drive</span>
               <span className="brand-tagline">Autoservis</span>
             </span>
           </a>
@@ -873,6 +882,17 @@ function App() {
         {lang === 'hr' ? 'Nazovi' : 'Call'} {content.contact.phone}
       </a>
 
+      {showScrollTop && (
+        <button
+          type="button"
+          className="scroll-top-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label={lang === 'hr' ? 'Povratak na vrh' : 'Back to top'}
+        >
+          <Icon name="arrowUp" />
+        </button>
+      )}
+
       <div className="hazard-strip" aria-hidden="true" />
       <footer className="site-footer">
         <div className="container footer-inner">
@@ -882,9 +902,9 @@ function App() {
               className="brand"
               onClick={(e) => scrollToSection(e, 'top')}
             >
-              <span className="brand-mark">KD</span>
+              <img className="brand-icon" src="/logo-mark-accent.png" alt="K-Drive" />
               <span className="brand-text">
-                <span className="brand-name">K-Drive</span>
+                <span className="brand-name">Drive</span>
                 <span className="brand-tagline">Autoservis</span>
               </span>
             </a>

@@ -4,14 +4,20 @@ import {
   createSession,
   deleteSession,
   validateSession,
+  updateAdminPassword,
 } from '../db.js'
-import { verifyPassword } from '../auth.js'
+import { hashPassword, verifyPassword } from '../auth.js'
 import { createRateLimiter } from '../rateLimit.js'
 
 export const SESSION_COOKIE = 'k_drive_session'
 
 // Slows down password-guessing: 10 attempts per 15 minutes per IP.
 const isLoginRateLimited = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+})
+
+const isPasswordChangeRateLimited = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 10,
 })
@@ -61,6 +67,38 @@ router.post('/logout', async (req, res) => {
 router.get('/me', async (req, res) => {
   const token = req.cookies?.[SESSION_COOKIE]
   res.json({ authenticated: await validateSession(token) })
+})
+
+router.post('/password', requireAuth, async (req, res) => {
+  if (isPasswordChangeRateLimited(req.ip)) {
+    return res
+      .status(429)
+      .json({ error: 'Previše pokušaja. Pokušajte ponovno kasnije.' })
+  }
+
+  const { currentPassword, newPassword } = req.body ?? {}
+  if (
+    typeof currentPassword !== 'string' ||
+    !currentPassword ||
+    typeof newPassword !== 'string' ||
+    !newPassword
+  ) {
+    return res.status(400).json({ error: 'Trenutna i nova lozinka su obavezne.' })
+  }
+  if (newPassword.length < 8) {
+    return res
+      .status(400)
+      .json({ error: 'Nova lozinka mora imati barem 8 znakova.' })
+  }
+
+  const admin = await getAdmin()
+  if (!admin || !verifyPassword(currentPassword, admin.password_hash, admin.password_salt)) {
+    return res.status(401).json({ error: 'Trenutna lozinka nije točna.' })
+  }
+
+  const { hash, salt } = hashPassword(newPassword)
+  await updateAdminPassword(hash, salt)
+  res.json({ ok: true })
 })
 
 export default router

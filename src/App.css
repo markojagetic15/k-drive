@@ -169,13 +169,14 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: var(--navy);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 800;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+.brand-icon {
+  height: 34px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
 }
 .brand-text {
@@ -1476,6 +1477,44 @@
   }
   .site-footer {
     padding-bottom: 76px;
+  }
+}
+
+/* Scroll to top */
+.scroll-top-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 45;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+.scroll-top-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+}
+.scroll-top-btn .icon {
+  width: 20px;
+  height: 20px;
+}
+@media (max-width: 640px) {
+  .scroll-top-btn {
+    right: 16px;
+    bottom: 72px;
   }
 }
 

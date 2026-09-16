@@ -28,6 +28,9 @@ export type IconName =
   | 'menu'
   | 'close'
   | 'star'
+  | 'arrowUp'
+  | 'eye'
+  | 'eyeOff'
 
 export type ServiceItem = {
   id: string

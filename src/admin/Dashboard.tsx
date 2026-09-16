@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import type {
   HighlightItem,
   ProcessStep,
@@ -7,8 +7,9 @@ import type {
   StatItem,
   TuningModel,
 } from '../content/types'
-import { fetchContent, logout, saveContent } from '../api'
+import { changePassword, fetchContent, logout, saveContent } from '../api'
 import { Icon, ICON_NAMES } from '../components/Icon'
+import PasswordField from '../components/PasswordField'
 import { useTheme } from '../context/ThemeContext'
 import LocalizedField from './LocalizedField'
 import ImageUploader from './ImageUploader'
@@ -21,6 +22,7 @@ const TABS = [
   { id: 'proces', label: 'Proces' },
   { id: 'tuning', label: 'Tuning i radovi' },
   { id: 'ostalo', label: 'CTA i footer' },
+  { id: 'sigurnost', label: 'Sigurnost' },
 ] as const
 
 const WEEKDAYS = [
@@ -45,6 +47,14 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<TabId>('kontakt')
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState<string | null>(null)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [changingPassword, setChangingPassword] = useState(false)
+  const [passwordStatus, setPasswordStatus] = useState<{
+    type: 'success' | 'error'
+    message: string
+  } | null>(null)
 
   useEffect(() => {
     fetchContent().then(setDraft)
@@ -73,6 +83,25 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
 
   function handleLogout() {
     logout().finally(onLogout)
+  }
+
+  function handleChangePassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setPasswordStatus(null)
+    if (newPassword !== confirmPassword) {
+      setPasswordStatus({ type: 'error', message: 'Nove lozinke se ne podudaraju.' })
+      return
+    }
+    setChangingPassword(true)
+    changePassword(currentPassword, newPassword)
+      .then(() => {
+        setPasswordStatus({ type: 'success', message: 'Lozinka je promijenjena.' })
+        setCurrentPassword('')
+        setNewPassword('')
+        setConfirmPassword('')
+      })
+      .catch((err: Error) => setPasswordStatus({ type: 'error', message: err.message }))
+      .finally(() => setChangingPassword(false))
   }
 
   // Images are persisted immediately on upload (not just on "Spremi promjene")
@@ -215,7 +244,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
     <div className="admin-shell">
       <header className="admin-header">
         <div className="admin-header-brand">
-          <span className="brand-mark">KD</span>
+          <img className="brand-mark" src="/brand-mark-boxed.png" alt="K-Drive" />
           K-Drive Admin
         </div>
         <div className="admin-header-actions">
@@ -1081,6 +1110,51 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                   setDraft({ ...draft, nav: { ...draft.nav, kontakt } })
                 }
               />
+            </section>
+          )}
+
+          {tab === 'sigurnost' && (
+            <section className="admin-section">
+              <h2>Sigurnost</h2>
+              <h3>Promjena lozinke</h3>
+              <p className="field-hint">
+                Nakon promjene ostajete prijavljeni na ovom uređaju.
+              </p>
+              <form className="password-form" onSubmit={handleChangePassword}>
+                <PasswordField
+                  label="Trenutna lozinka"
+                  value={currentPassword}
+                  onChange={setCurrentPassword}
+                  required
+                  autoComplete="current-password"
+                />
+                <PasswordField
+                  label="Nova lozinka"
+                  value={newPassword}
+                  onChange={setNewPassword}
+                  required
+                  autoComplete="new-password"
+                />
+                <PasswordField
+                  label="Potvrdi novu lozinku"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                  required
+                  autoComplete="new-password"
+                />
+                {passwordStatus && (
+                  <p className={passwordStatus.type === 'error' ? 'admin-error' : 'admin-success'}>
+                    {passwordStatus.message}
+                  </p>
+                )}
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  disabled={changingPassword}
+                >
+                  {changingPassword ? 'Spremanje...' : 'Promijeni lozinku'}
+                </button>
+              </form>
             </section>
           )}
         </div>
