@@ -244,7 +244,7 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
     <div className="admin-shell">
       <header className="admin-header">
         <div className="admin-header-brand">
-          <img className="brand-mark" src="/brand-mark-boxed.png" alt="K-Drive" />
+          <img className="brand-icon" src="/logo-mark-accent.png" alt="K-Drive" />
           K-Drive Admin
         </div>
         <div className="admin-header-actions">

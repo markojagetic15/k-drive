@@ -35,9 +35,9 @@ function PrivacyPolicy() {
       <header className="site-header">
         <div className="container header-inner">
           <Link to="/" className="brand">
-            <img className="brand-mark" src="/brand-mark-boxed.png" alt="K-Drive" />
+            <img className="brand-icon" src="/logo-mark-accent.png" alt="K-Drive" />
             <span className="brand-text">
-              <span className="brand-name">K-Drive</span>
+              <span className="brand-name">Drive</span>
               <span className="brand-tagline">Autoservis</span>
             </span>
           </Link>

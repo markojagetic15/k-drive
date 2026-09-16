@@ -35,7 +35,7 @@ export default function Login({ onSuccess }: { onSuccess: () => void }) {
       </button>
       <form className="admin-login-card" onSubmit={handleSubmit}>
         <div className="admin-login-brand">
-          <img className="brand-mark" src="/brand-mark-boxed.png" alt="K-Drive" />
+          <img className="brand-icon" src="/logo-mark-accent.png" alt="K-Drive" />
           K-Drive Admin
         </div>
         <p className="admin-login-hint">
