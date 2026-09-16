@@ -529,7 +529,7 @@
   padding: 22px 26px;
   background: var(--surface);
   border: 1px solid var(--border);
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-lg);
 }
 .vehicle-filter-label {
   display: flex;
@@ -935,7 +935,7 @@
   gap: 14px;
   background: var(--surface);
   border: 1px solid var(--border);
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-lg);
   padding: 48px 40px;
 }
 .tuning-lead {
@@ -1053,7 +1053,7 @@
   margin: 0 auto;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   touch-action: pan-y;
   cursor: ew-resize;
@@ -1329,7 +1329,7 @@
 .contact-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-lg);
   padding: 40px;
   display: flex;
   flex-direction: column;
@@ -1363,7 +1363,7 @@
 .contact-form-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-lg);
   padding: 40px;
   display: flex;
   flex-direction: column;

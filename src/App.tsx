@@ -42,19 +42,20 @@ const EMPTY_FORM: InquiryForm = {
   website: '',
 }
 
-type HeroFilter = {
-  marka: string
-  model: string
-  godiste: string
-  kategorija: string
-}
-
-const EMPTY_HERO_FILTER: HeroFilter = {
-  marka: '',
-  model: '',
-  godiste: '',
-  kategorija: '',
-}
+// Vehicle quick filter - privremeno isključeno, izvedba nije zadovoljavala
+// type HeroFilter = {
+//   marka: string
+//   model: string
+//   godiste: string
+//   kategorija: string
+// }
+//
+// const EMPTY_HERO_FILTER: HeroFilter = {
+//   marka: '',
+//   model: '',
+//   godiste: '',
+//   kategorija: '',
+// }
 
 type SubmitStatus = 'idle' | 'sending' | 'success' | 'error'
 
@@ -66,8 +67,8 @@ function App() {
   const [status, setStatus] = useState<SubmitStatus>('idle')
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
-  const [heroFilter, setHeroFilter] = useState<HeroFilter>(EMPTY_HERO_FILTER)
-  const [highlightedService, setHighlightedService] = useState<string | null>(null)
+  // const [heroFilter, setHeroFilter] = useState<HeroFilter>(EMPTY_HERO_FILTER)
+  // const [highlightedService, setHighlightedService] = useState<string | null>(null)
 
   function scrollToSection(event: MouseEvent<HTMLAnchorElement>, id: string) {
     event.preventDefault()
@@ -163,30 +164,31 @@ function App() {
       })
   }
 
-  function handleHeroFilterSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!content) return
-    const vehicleParts = [heroFilter.marka, heroFilter.model, heroFilter.godiste]
-      .map((s) => s.trim())
-      .filter(Boolean)
-    if (vehicleParts.length) {
-      setForm((prev) => ({ ...prev, vehicle: vehicleParts.join(' ') }))
-    }
-
-    const match = content.services.items.find(
-      (s) => t(s.title) === heroFilter.kategorija,
-    )
-
-    if (match) {
-      setHighlightedService(match.id)
-      document
-        .getElementById(`service-${match.id}`)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      window.setTimeout(() => setHighlightedService(null), 2600)
-    } else {
-      document.getElementById('usluge')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }
+  // Vehicle quick filter - privremeno isključeno, izvedba nije zadovoljavala
+  // function handleHeroFilterSubmit(event: FormEvent<HTMLFormElement>) {
+  //   event.preventDefault()
+  //   if (!content) return
+  //   const vehicleParts = [heroFilter.marka, heroFilter.model, heroFilter.godiste]
+  //     .map((s) => s.trim())
+  //     .filter(Boolean)
+  //   if (vehicleParts.length) {
+  //     setForm((prev) => ({ ...prev, vehicle: vehicleParts.join(' ') }))
+  //   }
+  //
+  //   const match = content.services.items.find(
+  //     (s) => t(s.title) === heroFilter.kategorija,
+  //   )
+  //
+  //   if (match) {
+  //     setHighlightedService(match.id)
+  //     document
+  //       .getElementById(`service-${match.id}`)
+  //       ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  //     window.setTimeout(() => setHighlightedService(null), 2600)
+  //   } else {
+  //     document.getElementById('usluge')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  //   }
+  // }
 
   const NAV_LINKS: { id: string; href: string; label: string }[] = [
     { id: 'o-nama', href: '#o-nama', label: t(content.nav.oNama) },
@@ -195,10 +197,10 @@ function App() {
     { id: 'kontakt', href: '#kontakt', label: t(content.nav.kontakt) },
   ]
 
-  const KATEGORIJA_OPTIONS = [
-    ...content.services.items.map((s) => t(s.title)),
-    lang === 'hr' ? 'Drugo' : 'Other',
-  ]
+  // const KATEGORIJA_OPTIONS = [
+  //   ...content.services.items.map((s) => t(s.title)),
+  //   lang === 'hr' ? 'Drugo' : 'Other',
+  // ]
 
   return (
     <>
@@ -374,6 +376,7 @@ function App() {
               ))}
             </div>
           </div>
+          {/* Vehicle quick filter - privremeno isključeno, izvedba nije zadovoljavala
           <div className="container">
             <form className="vehicle-filter" onSubmit={handleHeroFilterSubmit}>
               <span className="vehicle-filter-label">
@@ -436,6 +439,7 @@ function App() {
               </div>
             </form>
           </div>
+          */}
         </section>
 
         <section className="brands-strip">
@@ -531,7 +535,7 @@ function App() {
               {content.services.items.map((service, index) => (
                 <Reveal
                   id={`service-${service.id}`}
-                  className={`service-card${highlightedService === service.id ? ' is-highlighted' : ''}`}
+                  className="service-card"
                   key={service.id}
                   delay={(index % 4) * 70}
                 >
