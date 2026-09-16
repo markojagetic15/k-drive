@@ -99,11 +99,11 @@
     "eyebrow": { "hr": "Naši radovi", "en": "Our work" },
     "title": { "hr": "Prije i poslije", "en": "Before and after" },
     "lead": {
-      "hr": "Povucite razdjelnik za usporedbu. Prikaz je primjer dok ne dodamo stvarne fotografije radova.",
-      "en": "Drag the slider to compare. This is a placeholder example until real project photos are added."
+      "hr": "Povucite razdjelnik za usporedbu.",
+      "en": "Drag the slider to compare."
     },
-    "beforeLabel": { "hr": "PRIJE (primjer)", "en": "BEFORE (example)" },
-    "afterLabel": { "hr": "POSLIJE (primjer)", "en": "AFTER (example)" },
+    "beforeLabel": { "hr": "PRIJE", "en": "BEFORE" },
+    "afterLabel": { "hr": "POSLIJE", "en": "AFTER" },
     "beforeImage": "/uploads/car-lift.jpg",
     "afterImage": "/uploads/machine-detail.jpg"
   },
@@ -235,35 +235,6 @@
       }
     ]
   },
-  "values": [
-    {
-      "id": "value-reliability",
-      "icon": "motor",
-      "title": { "hr": "Visoka pouzdanost", "en": "High reliability" },
-      "desc": {
-        "hr": "Optimalna snaga i performanse za svako vozilo.",
-        "en": "Optimal power and performance for every vehicle."
-      }
-    },
-    {
-      "id": "value-diagnostics",
-      "icon": "target",
-      "title": { "hr": "Precizna dijagnostika", "en": "Precise diagnostics" },
-      "desc": {
-        "hr": "Najmodernija oprema za brzo otkrivanje kvarova.",
-        "en": "State-of-the-art equipment for fast fault detection."
-      }
-    },
-    {
-      "id": "value-pricing",
-      "icon": "key",
-      "title": { "hr": "Povoljne cijene", "en": "Affordable prices" },
-      "desc": {
-        "hr": "Transparentne cijene bez iznenađenja.",
-        "en": "Transparent pricing with no surprises."
-      }
-    }
-  ],
   "process": {
     "eyebrow": { "hr": "Naš proces", "en": "Our process" },
     "title": { "hr": "Težimo savršenstvu", "en": "We strive for perfection" },

@@ -11,7 +11,6 @@ import { useContent } from './context/ContentContext'
 import { useLanguage } from './context/LanguageContext'
 import { useTheme } from './context/ThemeContext'
 import { sendInquiry } from './api'
-import type { IconName } from './content/types'
 
 const SERVICE_CHECKBOXES: { id: string; label: Record<'hr' | 'en', string> }[] = [
   { id: 'mali-servis', label: { hr: 'Mali servis', en: 'Minor service' } },
@@ -451,7 +450,6 @@ function App() {
               ))}
             </div>
           </div>
-          <div className="angled-divider" aria-hidden="true" />
         </section>
 
         <section className="reviews-strip">
@@ -502,17 +500,13 @@ function App() {
               <div className="highlight-list">
                 {content.highlights.map((item, index) => (
                   <Reveal
-                    className="highlight-card"
+                    className="highlight-row"
                     key={item.id}
                     delay={index * 80}
                   >
-                    <Icon
-                      name={item.icon as IconName}
-                      className="card-watermark"
-                    />
-                    <div className="highlight-icon">
-                      <Icon name={item.icon as IconName} />
-                    </div>
+                    <span className="highlight-index">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
                     <div>
                       <h3>{t(item.title)}</h3>
                       <p>{t(item.desc)}</p>
@@ -556,7 +550,6 @@ function App() {
               ))}
             </div>
           </div>
-          <div className="angled-divider" aria-hidden="true" />
         </section>
 
         <section className="section tuning-section" id="tuning">
@@ -571,22 +564,6 @@ function App() {
                 onRequestQuote={requestTuningQuote}
               />
             </Reveal>
-          </div>
-        </section>
-
-        <section className="section values-strip">
-          <div className="container">
-            <div className="values-grid">
-              {content.values.map((value) => (
-                <Reveal className="value-item" key={value.id}>
-                  <div className="value-icon">
-                    <Icon name={value.icon} />
-                  </div>
-                  <h3>{t(value.title)}</h3>
-                  <p>{t(value.desc)}</p>
-                </Reveal>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -773,9 +750,10 @@ function App() {
                       </label>
                       <input
                         id="preferredDate"
-                        type="date"
+                        type="text"
                         value={form.preferredDate}
                         onChange={(e) => updateField('preferredDate', e.target.value)}
+                        placeholder={lang === 'hr' ? 'npr. 20.09.2026 ili idući tjedan' : 'e.g. Sep 20 or next week'}
                       />
                     </div>
                   </div>

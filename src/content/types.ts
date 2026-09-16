@@ -63,13 +63,6 @@ export type ChipItem = {
   label: Localized
 }
 
-export type ValueItem = {
-  id: string
-  icon: IconName
-  title: Localized
-  desc: Localized
-}
-
 export type TuningModel = {
   id: string
   name: string
@@ -151,7 +144,6 @@ export type SiteContent = {
     lead: Localized
     items: ServiceItem[]
   }
-  values: ValueItem[]
   process: {
     eyebrow: Localized
     title: Localized

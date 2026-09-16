@@ -6,7 +6,6 @@ import type {
   SiteContent,
   StatItem,
   TuningModel,
-  ValueItem,
 } from '../content/types'
 import { fetchContent, logout, saveContent } from '../api'
 import { Icon, ICON_NAMES } from '../components/Icon'
@@ -154,15 +153,6 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
           items: prev.services.items.filter((_, i) => i !== index),
         },
       }
-    })
-  }
-
-  function updateValue(index: number, patch: Partial<ValueItem>) {
-    setDraft((prev) => {
-      if (!prev) return prev
-      const values = [...prev.values]
-      values[index] = { ...values[index], ...patch }
-      return { ...prev, values }
     })
   }
 
@@ -788,45 +778,6 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
               <button type="button" className="btn btn-outline" onClick={addService}>
                 + Dodaj uslugu
               </button>
-
-              <h3>Zašto nas odabrati (tri vrijednosti)</h3>
-              {draft.values.map((value, index) => (
-                <div className="array-item" key={value.id}>
-                  <div className="field-grid">
-                    <div className="field">
-                      <span className="field-label">Ikona</span>
-                      <div className="icon-select">
-                        <Icon name={value.icon} />
-                        <select
-                          value={value.icon}
-                          onChange={(e) =>
-                            updateValue(index, {
-                              icon: e.target.value as ValueItem['icon'],
-                            })
-                          }
-                        >
-                          {ICON_NAMES.map((name) => (
-                            <option key={name} value={name}>
-                              {name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <LocalizedField
-                    label="Naslov"
-                    value={value.title}
-                    onChange={(title) => updateValue(index, { title })}
-                  />
-                  <LocalizedField
-                    label="Opis"
-                    value={value.desc}
-                    multiline
-                    onChange={(desc) => updateValue(index, { desc })}
-                  />
-                </div>
-              ))}
             </section>
           )}
 
@@ -1024,6 +975,22 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                   setDraft({ ...draft, beforeAfter: { ...draft.beforeAfter, lead } })
                 }
               />
+              <div className="field-grid">
+                <LocalizedField
+                  label="Oznaka na slici PRIJE"
+                  value={draft.beforeAfter.beforeLabel}
+                  onChange={(beforeLabel) =>
+                    setDraft({ ...draft, beforeAfter: { ...draft.beforeAfter, beforeLabel } })
+                  }
+                />
+                <LocalizedField
+                  label="Oznaka na slici POSLIJE"
+                  value={draft.beforeAfter.afterLabel}
+                  onChange={(afterLabel) =>
+                    setDraft({ ...draft, beforeAfter: { ...draft.beforeAfter, afterLabel } })
+                  }
+                />
+              </div>
               <div className="field-grid">
                 <ImageUploader
                   label="Slika PRIJE"
