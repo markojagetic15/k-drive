@@ -4,17 +4,17 @@ import { requireAuth } from './auth.js'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-  res.json(getContent())
+router.get('/', async (req, res) => {
+  res.json(await getContent())
 })
 
-router.put('/', requireAuth, (req, res) => {
+router.put('/', requireAuth, async (req, res) => {
   const body = req.body
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return res.status(400).json({ error: 'Neispravan format sadržaja.' })
   }
-  setContent(body)
-  res.json(getContent())
+  await setContent(body)
+  res.json(await getContent())
 })
 
 export default router

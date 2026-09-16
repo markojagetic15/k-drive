@@ -16,9 +16,9 @@ const isLoginRateLimited = createRateLimiter({
   max: 10,
 })
 
-export function requireAuth(req, res, next) {
+export async function requireAuth(req, res, next) {
   const token = req.cookies?.[SESSION_COOKIE]
-  if (!validateSession(token)) {
+  if (!(await validateSession(token))) {
     return res.status(401).json({ error: 'Niste prijavljeni.' })
   }
   next()
@@ -26,7 +26,7 @@ export function requireAuth(req, res, next) {
 
 const router = Router()
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   if (isLoginRateLimited(req.ip)) {
     return res
       .status(429)
@@ -37,11 +37,11 @@ router.post('/login', (req, res) => {
   if (typeof password !== 'string' || !password) {
     return res.status(400).json({ error: 'Lozinka je obavezna.' })
   }
-  const admin = getAdmin()
+  const admin = await getAdmin()
   if (!admin || !verifyPassword(password, admin.password_hash, admin.password_salt)) {
     return res.status(401).json({ error: 'Pogrešna lozinka.' })
   }
-  const token = createSession()
+  const token = await createSession()
   res.cookie(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
@@ -51,16 +51,16 @@ router.post('/login', (req, res) => {
   res.json({ ok: true })
 })
 
-router.post('/logout', (req, res) => {
+router.post('/logout', async (req, res) => {
   const token = req.cookies?.[SESSION_COOKIE]
-  if (token) deleteSession(token)
+  if (token) await deleteSession(token)
   res.clearCookie(SESSION_COOKIE)
   res.json({ ok: true })
 })
 
-router.get('/me', (req, res) => {
+router.get('/me', async (req, res) => {
   const token = req.cookies?.[SESSION_COOKIE]
-  res.json({ authenticated: validateSession(token) })
+  res.json({ authenticated: await validateSession(token) })
 })
 
 export default router

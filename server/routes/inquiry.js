@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    const content = getContent()
+    const content = await getContent()
     await sendInquiryEmail({
       to: content.contact.email,
       name: name.trim(),
