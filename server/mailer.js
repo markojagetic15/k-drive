@@ -10,6 +10,7 @@ const SERVICE_LABELS = {
   dijagnostika: 'Dijagnostika',
   tuning: 'Tuning',
   kocnice: 'Kočnice',
+  drugo: 'Drugo',
 }
 
 function getTransporter() {

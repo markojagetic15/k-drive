@@ -3,7 +3,8 @@ import './App.css'
 import { Icon } from './components/Icon'
 import { WrenchMotif } from './components/Decor'
 import { Reveal } from './components/Reveal'
-import { LiveStatus } from './components/LiveStatus'
+// Privremeno isključeno dok radno vrijeme ne bude pouzdano potvrđeno - vidi upotrebu niže
+// import { LiveStatus } from './components/LiveStatus'
 import { TuningCalculator } from './components/TuningCalculator'
 import { BeforeAfterSlider } from './components/BeforeAfterSlider'
 import { useContent } from './context/ContentContext'
@@ -18,6 +19,7 @@ const SERVICE_CHECKBOXES: { id: string; label: Record<'hr' | 'en', string> }[] =
   { id: 'dijagnostika', label: { hr: 'Dijagnostika', en: 'Diagnostics' } },
   { id: 'tuning', label: { hr: 'Tuning', en: 'Tuning' } },
   { id: 'kocnice', label: { hr: 'Kočnice', en: 'Brakes' } },
+  { id: 'drugo', label: { hr: 'Drugo', en: 'Other' } },
 ]
 
 type InquiryForm = {
@@ -65,6 +67,7 @@ function App() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [heroFilter, setHeroFilter] = useState<HeroFilter>(EMPTY_HERO_FILTER)
+  const [highlightedService, setHighlightedService] = useState<string | null>(null)
 
   function scrollToSection(event: MouseEvent<HTMLAnchorElement>, id: string) {
     event.preventDefault()
@@ -106,23 +109,6 @@ function App() {
         ? prev.services.filter((s) => s !== id)
         : [...prev.services, id],
     }))
-  }
-
-  function handleHeroFilterSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const vehicleParts = [heroFilter.marka, heroFilter.model, heroFilter.godiste]
-      .map((s) => s.trim())
-      .filter(Boolean)
-    setForm((prev) => ({
-      ...prev,
-      vehicle: vehicleParts.join(' ') || prev.vehicle,
-      note: heroFilter.kategorija
-        ? lang === 'hr'
-          ? `Zanima me: ${heroFilter.kategorija}`
-          : `Interested in: ${heroFilter.kategorija}`
-        : prev.note,
-    }))
-    scrollToContact()
   }
 
   useEffect(() => {
@@ -177,6 +163,30 @@ function App() {
       })
   }
 
+  function handleHeroFilterSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const vehicleParts = [heroFilter.marka, heroFilter.model, heroFilter.godiste]
+      .map((s) => s.trim())
+      .filter(Boolean)
+    if (vehicleParts.length) {
+      setForm((prev) => ({ ...prev, vehicle: vehicleParts.join(' ') }))
+    }
+
+    const match = content.services.items.find(
+      (s) => t(s.title) === heroFilter.kategorija,
+    )
+
+    if (match) {
+      setHighlightedService(match.id)
+      document
+        .getElementById(`service-${match.id}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      window.setTimeout(() => setHighlightedService(null), 2600)
+    } else {
+      document.getElementById('usluge')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   const NAV_LINKS: { id: string; href: string; label: string }[] = [
     { id: 'o-nama', href: '#o-nama', label: t(content.nav.oNama) },
     { id: 'usluge', href: '#usluge', label: t(content.nav.usluge) },
@@ -184,7 +194,10 @@ function App() {
     { id: 'kontakt', href: '#kontakt', label: t(content.nav.kontakt) },
   ]
 
-  const KATEGORIJA_OPTIONS = content.services.items.map((s) => t(s.title))
+  const KATEGORIJA_OPTIONS = [
+    ...content.services.items.map((s) => t(s.title)),
+    lang === 'hr' ? 'Drugo' : 'Other',
+  ]
 
   return (
     <>
@@ -217,7 +230,9 @@ function App() {
                 {link.label}
               </a>
             ))}
+            {/* Privremeno isključeno - vidi komentar niže
             <LiveStatus schedule={content.schedule} className="header-live-status" />
+            */}
           </nav>
           <div className="header-actions">
             <button
@@ -246,10 +261,6 @@ function App() {
             >
               <Icon name={theme === 'light' ? 'moon' : 'sun'} className="icon" />
             </button>
-            <a className="btn btn-emergency" href={content.contact.phoneHref}>
-              <Icon name="phone" />
-              {lang === 'hr' ? 'HITNI POZIV' : 'EMERGENCY CALL'}
-            </a>
             <button
               type="button"
               className="nav-toggle"
@@ -291,7 +302,9 @@ function App() {
               <Icon name="phone" />
               {content.contact.phone}
             </a>
+            {/* Privremeno isključeno dok radno vrijeme ne bude pouzdano potvrđeno
             <LiveStatus schedule={content.schedule} className="mobile-nav-live-status" />
+            */}
           </nav>
         )}
         <div className="hazard-strip" aria-hidden="true" />
@@ -516,7 +529,8 @@ function App() {
             <div className="services-grid">
               {content.services.items.map((service, index) => (
                 <Reveal
-                  className="service-card"
+                  id={`service-${service.id}`}
+                  className={`service-card${highlightedService === service.id ? ' is-highlighted' : ''}`}
                   key={service.id}
                   delay={(index % 4) * 70}
                 >
