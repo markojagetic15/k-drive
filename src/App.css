@@ -55,36 +55,6 @@
   padding: 15px 28px;
   font-size: 16px;
 }
-.btn-emergency {
-  background: var(--status-closed, #ff3b3b);
-  color: #fff;
-  box-shadow:
-    0 0 0 1px rgba(255, 59, 59, 0.5),
-    0 0 20px rgba(255, 59, 59, 0.5);
-  animation: emergency-pulse 2.2s ease-in-out infinite;
-}
-.btn-emergency:hover {
-  background: #ff1f1f;
-}
-@keyframes emergency-pulse {
-  0%,
-  100% {
-    box-shadow:
-      0 0 0 1px rgba(255, 59, 59, 0.5),
-      0 0 14px rgba(255, 59, 59, 0.4);
-  }
-  50% {
-    box-shadow:
-      0 0 0 1px rgba(255, 59, 59, 0.6),
-      0 0 26px rgba(255, 59, 59, 0.7);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .btn-emergency {
-    animation: none;
-  }
-}
-
 /* Decorative background motifs */
 .proces-bg-decor {
   position: absolute;
@@ -275,12 +245,6 @@
   background: var(--accent-soft);
   color: var(--accent-dark);
   border-color: transparent;
-}
-
-@media (max-width: 640px) {
-  .header-actions .btn-emergency {
-    display: none;
-  }
 }
 
 .nav-toggle {
@@ -805,7 +769,7 @@
   gap: 18px;
   padding: 24px;
   border: 1px solid var(--border);
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-md);
   background: var(--surface);
   transition:
     box-shadow 0.15s ease,
@@ -872,7 +836,7 @@
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-md);
   padding: 28px 24px;
   display: flex;
   flex-direction: column;
@@ -890,6 +854,25 @@
   transform: translateY(-4px);
   box-shadow: var(--shadow-md), var(--accent-glow);
   border-color: var(--accent);
+}
+.service-card.is-highlighted {
+  border-color: var(--accent);
+  animation: service-found-pulse 1.3s ease-in-out 2;
+}
+@keyframes service-found-pulse {
+  0%,
+  100% {
+    box-shadow: var(--shadow-md), 0 0 0 1px rgba(255, 107, 0, 0.4), 0 0 18px rgba(255, 107, 0, 0.3);
+  }
+  50% {
+    box-shadow: var(--shadow-md), 0 0 0 1px rgba(255, 107, 0, 0.7), 0 0 36px rgba(255, 107, 0, 0.65);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-card.is-highlighted {
+    animation: none;
+    box-shadow: var(--accent-glow);
+  }
 }
 .service-icon {
   width: 46px;
@@ -1230,7 +1213,7 @@
 .process-step {
   background: var(--surface);
   border: 1px solid var(--border);
-  clip-path: var(--clip-card);
+  border-radius: var(--radius-md);
   overflow: hidden;
   text-align: center;
   transition:
@@ -1554,15 +1537,15 @@
     bottom: 0;
     z-index: 50;
     height: 56px;
-    background: var(--status-closed, #ff3b3b);
-    color: #fff;
+    background: var(--accent);
+    color: #0a0a0a;
     font-family: var(--display);
     font-weight: 700;
     font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     text-decoration: none;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
   }
   .sticky-call-bar .icon {
     width: 18px;
