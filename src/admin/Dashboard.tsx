@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import type {
   HighlightItem,
   ProcessStep,
+  Review,
   ServiceItem,
   SiteContent,
   StatItem,
@@ -144,6 +145,61 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
     setDraft((prev) => {
       if (!prev) return prev
       return { ...prev, highlights: prev.highlights.filter((_, i) => i !== index) }
+    })
+  }
+
+  function addStat() {
+    setDraft((prev) => {
+      if (!prev) return prev
+      const stat: StatItem = {
+        id: crypto.randomUUID(),
+        icon: 'wrench',
+        value: '',
+        label: emptyLocalized(),
+      }
+      return { ...prev, hero: { ...prev.hero, stats: [...prev.hero.stats, stat] } }
+    })
+  }
+
+  function removeStat(index: number) {
+    setDraft((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        hero: { ...prev.hero, stats: prev.hero.stats.filter((_, i) => i !== index) },
+      }
+    })
+  }
+
+  function updateReview(index: number, patch: Partial<Review>) {
+    setDraft((prev) => {
+      if (!prev) return prev
+      const items = [...prev.reviews.items]
+      items[index] = { ...items[index], ...patch }
+      return { ...prev, reviews: { ...prev.reviews, items } }
+    })
+  }
+
+  function addReview() {
+    setDraft((prev) => {
+      if (!prev) return prev
+      const item: Review = {
+        id: crypto.randomUUID(),
+        author: '',
+        rating: 5,
+        text: '',
+      }
+      return { ...prev, reviews: { ...prev.reviews, items: [...prev.reviews.items, item] } }
+    })
+  }
+
+  function removeReview(index: number) {
+    setDraft((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        reviews: { ...prev.reviews, items: prev.reviews.items.filter((_, i) => i !== index) },
+      }
     })
   }
 
@@ -428,13 +484,6 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                 }
               />
               <LocalizedField
-                label="Oznaka iznad naslova"
-                value={draft.hero.eyebrow}
-                onChange={(eyebrow) =>
-                  setDraft({ ...draft, hero: { ...draft.hero, eyebrow } })
-                }
-              />
-              <LocalizedField
                 label="Naslov"
                 value={draft.hero.title}
                 onChange={(title) =>
@@ -512,48 +561,18 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                       setDraft({ ...draft, hero: { ...draft.hero, stats } })
                     }}
                   />
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-danger"
+                    onClick={() => removeStat(index)}
+                  >
+                    Ukloni
+                  </button>
                 </div>
               ))}
-
-              <h3>Plutajuće oznake na slici</h3>
-              {draft.hero.chips.map((chip, index) => (
-                <div className="array-item" key={chip.id}>
-                  <div className="field-grid">
-                    <div className="field">
-                      <span className="field-label">Ikona</span>
-                      <div className="icon-select">
-                        <Icon name={chip.icon} />
-                        <select
-                          value={chip.icon}
-                          onChange={(e) => {
-                            const chips = [...draft.hero.chips]
-                            chips[index] = {
-                              ...chip,
-                              icon: e.target.value as ServiceItem['icon'],
-                            }
-                            setDraft({ ...draft, hero: { ...draft.hero, chips } })
-                          }}
-                        >
-                          {ICON_NAMES.map((name) => (
-                            <option key={name} value={name}>
-                              {name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <LocalizedField
-                    label="Tekst oznake"
-                    value={chip.label}
-                    onChange={(label) => {
-                      const chips = [...draft.hero.chips]
-                      chips[index] = { ...chip, label }
-                      setDraft({ ...draft, hero: { ...draft.hero, chips } })
-                    }}
-                  />
-                </div>
-              ))}
+              <button type="button" className="btn btn-outline" onClick={addStat}>
+                + Dodaj statistiku
+              </button>
 
               <h3>Marke vozila (traka ispod naslovnice)</h3>
               <LocalizedField
@@ -627,6 +646,50 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                   />
                 </div>
               </div>
+
+              <h3>Istaknute recenzije</h3>
+              {draft.reviews.items.map((review, index) => (
+                <div className="array-item" key={review.id}>
+                  <div className="field-grid">
+                    <div className="field">
+                      <span className="field-label">Ime recenzenta</span>
+                      <input
+                        value={review.author}
+                        onChange={(e) => updateReview(index, { author: e.target.value })}
+                      />
+                    </div>
+                    <div className="field">
+                      <span className="field-label">Ocjena (1-5)</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={5}
+                        value={review.rating}
+                        onChange={(e) =>
+                          updateReview(index, { rating: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="field">
+                    <span className="field-label">Tekst recenzije</span>
+                    <textarea
+                      value={review.text}
+                      onChange={(e) => updateReview(index, { text: e.target.value })}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-danger"
+                    onClick={() => removeReview(index)}
+                  >
+                    Ukloni
+                  </button>
+                </div>
+              ))}
+              <button type="button" className="btn btn-outline" onClick={addReview}>
+                + Dodaj recenziju
+              </button>
             </section>
           )}
 

@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type MouseEvent } from 'react'
+import { useEffect, useState, type CSSProperties, type FormEvent, type MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import './App.css'
 import { Icon } from './components/Icon'
@@ -326,10 +326,6 @@ function App() {
         <section className="hero">
           <div className="container hero-inner">
             <div className="hero-copy">
-              <span className="eyebrow hero-eyebrow">
-                <Icon name="wheel" />
-                {t(content.hero.eyebrow)}
-              </span>
               <h1>{t(content.hero.title)}</h1>
               <p className="lead">{t(content.hero.lead)}</p>
               <div className="hero-actions">
@@ -340,23 +336,10 @@ function App() {
                 >
                   {t(content.hero.ctaPrimary)}
                 </a>
-                <a
-                  className="btn btn-outline btn-lg"
-                  href={content.contact.phoneHref}
-                >
+                <a className="hero-phone-link" href={content.contact.phoneHref}>
                   <Icon name="phone" />
                   {t(content.hero.ctaSecondary)} {content.contact.phone}
                 </a>
-              </div>
-              <div className="hero-quick-info">
-                <span>
-                  <Icon name="pin" />
-                  {content.contact.address}
-                </span>
-                <span>
-                  <Icon name="clock" />
-                  {t(content.contact.hours)}
-                </span>
               </div>
               <div className="hero-stats">
                 {content.hero.stats.map((stat) => (
@@ -377,12 +360,6 @@ function App() {
                   alt={t(content.hero.title)}
                 />
               </div>
-              {content.hero.chips.map((chip, index) => (
-                <div className={`chip chip-${index + 1}`} key={chip.id}>
-                  <Icon name={chip.icon} />
-                  {t(chip.label)}
-                </div>
-              ))}
             </div>
           </div>
           {/* Vehicle quick filter - privremeno isključeno, izvedba nije zadovoljavala
@@ -488,6 +465,26 @@ function App() {
                 : 'See our reviews on Google Maps'}
             </a>
           </div>
+          {content.reviews.items.length > 0 && (
+            <Reveal className="reviews-marquee">
+              <div
+                className="reviews-track"
+                style={{ '--marquee-duration': `${content.reviews.items.length * 7}s` } as CSSProperties}
+              >
+                {[...content.reviews.items, ...content.reviews.items].map((review, index) => (
+                  <div className="review-card" key={`${review.id}-${index}`} aria-hidden={index >= content.reviews.items.length}>
+                    <div className="review-card-stars" aria-hidden="true">
+                      {Array.from({ length: review.rating }).map((_, i) => (
+                        <Icon name="star" key={i} />
+                      ))}
+                    </div>
+                    <p className="review-card-text">{review.text}</p>
+                    <span className="review-card-author">{review.author}</span>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          )}
         </section>
 
         <section className="section" id="o-nama">
@@ -942,6 +939,10 @@ function App() {
                   >
                     {content.contact.address}
                   </a>
+                </li>
+                <li className="footer-static">
+                  <Icon name="clock" />
+                  {t(content.contact.hours)}
                 </li>
               </ul>
             </div>

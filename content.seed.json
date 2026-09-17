@@ -17,7 +17,6 @@
     "kontakt": { "hr": "Kontakt", "en": "Contact" }
   },
   "hero": {
-    "eyebrow": { "hr": "Autoservis - Dugo Selo", "en": "Auto repair shop - Dugo Selo" },
     "title": {
       "hr": "Popravljamo sve marke automobila",
       "en": "We repair all makes of cars"
@@ -29,13 +28,8 @@
     "ctaPrimary": { "hr": "Zatraži besplatnu procjenu", "en": "Request a free estimate" },
     "ctaSecondary": { "hr": "Nazovi", "en": "Call" },
     "stats": [
-      { "id": "stat-services", "icon": "wrench", "value": "8+", "label": { "hr": "usluga na jednom mjestu", "en": "services in one place" } },
-      { "id": "stat-pricing", "icon": "tag", "value": "100%", "label": { "hr": "transparentne cijene", "en": "transparent pricing" } },
-      { "id": "stat-brands", "icon": "wheel", "value": "Sve marke", "label": { "hr": "i modeli vozila", "en": "and vehicle models" } }
-    ],
-    "chips": [
-      { "id": "chip-tuning", "icon": "gauge", "label": { "hr": "Chip tuning: do +30% snage", "en": "Chip tuning: up to +30% power" } },
-      { "id": "chip-hours", "icon": "clock", "label": { "hr": "Radimo prema dogovoru", "en": "Available by appointment" } }
+      { "id": "stat-experience", "icon": "wrench", "value": "8+", "label": { "hr": "Godina iskustva", "en": "Years of experience" } },
+      { "id": "stat-pricing", "icon": "tag", "value": "100%", "label": { "hr": "Transparentne cijene", "en": "Transparent pricing" } }
     ],
     "image": "/uploads/hero-workshop.jpg"
   },
@@ -44,9 +38,53 @@
     "items": ["BMW", "Mercedes-Benz", "Volkswagen", "Audi", "Škoda", "Renault", "Peugeot", "Opel", "Ford", "Fiat"]
   },
   "reviews": {
-    "rating": "",
-    "count": "",
-    "url": "https://www.google.com/maps/search/?api=1&query=K-Drive+Autoservis+Dugo+Selo"
+    "rating": "5.0",
+    "count": "12",
+    "url": "https://www.google.com/maps/search/?api=1&query=K-Drive+Autoservis+Dugo+Selo",
+    "items": [
+      {
+        "id": "review-ivan-zec",
+        "author": "Ivan Zec",
+        "rating": 5,
+        "text": "Odlična automehaničarska radnja koju bih svakome preporučio. Usluga je na vrhunskoj razini, sve je odrađeno brzo, kvalitetno i po dogovoru. Posebno bih pohvalio Karla koji je izuzetno profesionalan, ljubazan i spreman objasniti svaki detalj oko popravka. Vidi se da zna svoj posao i da mu je stalo do zadovoljstva klijenata. Definitivno ću se vratiti i ubuduće dolaziti ovdje kad god zatrebam automehaničara."
+      },
+      {
+        "id": "review-kristijan-jakolic",
+        "author": "Kristijan Jakolić",
+        "rating": 5,
+        "text": "Ostao u kvaru. Auto stao, bozic se upalio i odbija suradnju... zapeo u drugom gradu. Nikog ne znam... zovem redom kog najdem na internetu i vec mi se novcanik trese jer znam sta slijedi kada tako u kvaru ostanes...\nMedjutim doso decko. Korektan, brz i sposoban. Zavrsili kod njega u radioni i slozio auto isto vece. Usluga vrhunska! Cijena korektna. Da sam blize bio bi moj odabir ko bi mi auto odrzavao.\nTopla preporuka."
+      },
+      {
+        "id": "review-ivica-matas",
+        "author": "Ivica Matas",
+        "rating": 5,
+        "text": "Vrhunski majstor! Brz, profesionalan, stručan i korektan s cijenama. Sve pohvale za čistoću radione i ljubaznost. Konačno automehaničar kojem se može vjerovati!"
+      },
+      {
+        "id": "review-flame-shower",
+        "author": "Flame Shower",
+        "rating": 5,
+        "text": "Odlican,posten te vrijedan majstor.\nSve preporuke!!!"
+      },
+      {
+        "id": "review-branko-lovric",
+        "author": "Branko Lovrić",
+        "rating": 5,
+        "text": "Odlična ,brza i kvalitetna usluga."
+      },
+      {
+        "id": "review-mario-vranjes",
+        "author": "Mario Vranješ",
+        "rating": 5,
+        "text": "Kvaliteta i odgovornost !!!"
+      },
+      {
+        "id": "review-dorotea-krupic",
+        "author": "Dorotea Krupić",
+        "rating": 5,
+        "text": "Super! Hvala!"
+      }
+    ]
   },
   "schedule": {
     "days": [1, 2, 3, 4, 5],

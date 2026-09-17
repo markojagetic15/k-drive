@@ -99,16 +99,25 @@ async function backfillMissingContentFields() {
   const seed = JSON.parse(readFileSync(seedPath, 'utf-8'))
 
   const missingKeys = Object.keys(seed).filter((key) => !(key in stored))
-  if (missingKeys.length === 0) return
-
   const merged = { ...stored }
   for (const key of missingKeys) merged[key] = seed[key]
+
+  // reviews.items was added after "reviews" itself already shipped, so rows
+  // backfilled by an earlier deploy have "reviews" without "items" - patch
+  // that one nested field in too rather than only checking top-level keys.
+  const backfilledFields = [...missingKeys]
+  if (merged.reviews && !('items' in merged.reviews)) {
+    merged.reviews = { ...merged.reviews, items: seed.reviews.items }
+    backfilledFields.push('reviews.items')
+  }
+
+  if (backfilledFields.length === 0) return
 
   await pool.query('UPDATE content SET data = $1, updated_at = $2 WHERE id = 1', [
     JSON.stringify(merged),
     Date.now(),
   ])
-  console.log(`[db] Back-filled missing content fields: ${missingKeys.join(', ')}`)
+  console.log(`[db] Back-filled missing content fields: ${backfilledFields.join(', ')}`)
 }
 
 function mimeFromExt(ext) {

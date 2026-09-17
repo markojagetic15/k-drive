@@ -60,10 +60,11 @@ export type StatItem = {
   label: Localized
 }
 
-export type ChipItem = {
+export type Review = {
   id: string
-  icon: IconName
-  label: Localized
+  author: string
+  rating: number
+  text: string
 }
 
 export type TuningModel = {
@@ -93,13 +94,11 @@ export type SiteContent = {
     kontakt: Localized
   }
   hero: {
-    eyebrow: Localized
     title: Localized
     lead: Localized
     ctaPrimary: Localized
     ctaSecondary: Localized
     stats: StatItem[]
-    chips: ChipItem[]
     image: string
   }
   brands: {
@@ -110,6 +109,7 @@ export type SiteContent = {
     rating: string
     count: string
     url: string
+    items: Review[]
   }
   schedule: {
     days: number[]
