@@ -32,11 +32,19 @@ export type IconName =
   | 'eye'
   | 'eyeOff'
 
+export type PriceHistoryEntry = {
+  price: number
+  effectiveFrom: string
+}
+
 export type ServiceItem = {
   id: string
   icon: IconName
   title: Localized
   desc: Localized
+  price?: number
+  anchorPrice?: number
+  priceHistory?: PriceHistoryEntry[]
 }
 
 export type HighlightItem = {

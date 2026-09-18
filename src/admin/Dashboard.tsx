@@ -836,6 +836,38 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
                     multiline
                     onChange={(desc) => updateService(index, { desc })}
                   />
+                  <div className="field">
+                    <span className="field-label">Cijena u € (prazno = bez cijene)</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={service.price ?? ''}
+                      onChange={(e) =>
+                        updateService(index, {
+                          price: e.target.value === '' ? undefined : Number(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                  {service.price != null && (
+                    <p className="field-hint">
+                      Sidrena cijena (najniža cijena u zadnjih 30 dana, izračunava se
+                      automatski):{' '}
+                      <strong>
+                        {(service.anchorPrice ?? service.price).toFixed(2)} €
+                      </strong>
+                      {service.priceHistory && service.priceHistory.length > 0 && (
+                        <>
+                          {' '}
+                          — povijest:{' '}
+                          {service.priceHistory
+                            .map((entry) => `${entry.effectiveFrom}: ${entry.price.toFixed(2)} €`)
+                            .join(', ')}
+                        </>
+                      )}
+                    </p>
+                  )}
                   <button
                     type="button"
                     className="btn btn-outline btn-danger"
@@ -848,6 +880,19 @@ export default function Dashboard({ onLogout }: { onLogout: () => void }) {
               <button type="button" className="btn btn-outline" onClick={addService}>
                 + Dodaj uslugu
               </button>
+
+              <h3>Cjenik (sidrene cijene)</h3>
+              <p className="field-hint">
+                Javni, strojno čitljiv cjenik generira se automatski iz gornjih cijena.
+              </p>
+              <div className="admin-header-actions">
+                <a className="btn btn-outline" href="/api/price-feed.csv" download>
+                  Preuzmi CSV
+                </a>
+                <a className="btn btn-outline" href="/api/price-feed.xml" download>
+                  Preuzmi XML
+                </a>
+              </div>
             </section>
           )}
 

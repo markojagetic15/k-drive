@@ -956,6 +956,24 @@
   font-size: 14.5px;
   color: var(--text);
 }
+.service-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+.service-price-anchor {
+  font-size: 12px;
+  color: var(--muted);
+}
+.service-price-current {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
 .service-cta {
   align-self: flex-start;
   margin-top: auto;

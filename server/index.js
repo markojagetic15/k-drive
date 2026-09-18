@@ -10,6 +10,7 @@ import contentRoutes from './routes/content.js'
 import uploadRoutes from './routes/upload.js'
 import inquiryRoutes from './routes/inquiry.js'
 import healthRoutes from './routes/health.js'
+import priceFeedRoutes from './routes/priceFeed.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.join(__dirname, '..')
@@ -66,6 +67,7 @@ app.use('/api/content', contentRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/inquiry', inquiryRoutes)
 app.use('/api/health', healthRoutes)
+app.use('/api', priceFeedRoutes)
 
 if (existsSync(distDir)) {
   app.use(express.static(distDir))

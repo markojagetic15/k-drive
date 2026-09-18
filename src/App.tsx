@@ -12,6 +12,7 @@ import { useContent } from './context/ContentContext'
 import { useLanguage } from './context/LanguageContext'
 import { useTheme } from './context/ThemeContext'
 import { sendInquiry } from './api'
+import { formatPrice } from './lib/formatPrice'
 
 const SERVICE_CHECKBOXES: { id: string; label: Record<'hr' | 'en', string> }[] = [
   { id: 'mali-servis', label: { hr: 'Mali servis', en: 'Minor service' } },
@@ -546,6 +547,17 @@ function App() {
                   </div>
                   <h3>{t(service.title)}</h3>
                   <p>{t(service.desc)}</p>
+                  {service.price != null && (
+                    <div className="service-price">
+                      <span className="service-price-anchor">
+                        {lang === 'hr' ? 'Sidrena cijena' : 'Anchor price'}:{' '}
+                        {formatPrice(service.anchorPrice ?? service.price)}
+                      </span>
+                      <span className="service-price-current">
+                        {formatPrice(service.price)}
+                      </span>
+                    </div>
+                  )}
                   <button
                     type="button"
                     className="service-cta"
@@ -943,6 +955,21 @@ function App() {
                 <li className="footer-static">
                   <Icon name="clock" />
                   {t(content.contact.hours)}
+                </li>
+              </ul>
+            </div>
+            <div className="footer-col">
+              <h3>{lang === 'hr' ? 'Cjenik' : 'Price list'}</h3>
+              <ul>
+                <li>
+                  <a href="/api/price-feed.csv" download>
+                    {lang === 'hr' ? 'Preuzmi CSV' : 'Download CSV'}
+                  </a>
+                </li>
+                <li>
+                  <a href="/api/price-feed.xml" download>
+                    {lang === 'hr' ? 'Preuzmi XML' : 'Download XML'}
+                  </a>
                 </li>
               </ul>
             </div>
