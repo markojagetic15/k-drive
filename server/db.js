@@ -28,6 +28,14 @@ const pool = new Pool({
     : { rejectUnauthorized: false },
 })
 
+// Idle clients in the pool can be dropped by the managed Postgres provider
+// (pooler restarts, brief network blips) at any time after boot. Without
+// this listener, that drop is an unhandled 'error' event and crashes the
+// whole process instead of just discarding the dead client.
+pool.on('error', (err) => {
+  console.error('[db] Unexpected error on idle client:', err.message)
+})
+
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7
 
 async function migrateLocalUploadsToR2() {
@@ -197,7 +205,27 @@ async function init() {
   }
 }
 
-await init()
+// A pooled managed-Postgres connection can fail transiently right at boot
+// (pooler restart, brief network blip) even though the database itself is
+// healthy — retry a few times with backoff instead of crashing the process
+// on the first hiccup.
+async function initWithRetry(retries = 5, delayMs = 2000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await init()
+      return
+    } catch (err) {
+      if (attempt === retries) throw err
+      console.error(
+        `[db] init() failed (attempt ${attempt}/${retries}): ${err.message} — retrying in ${delayMs}ms`,
+      )
+      await new Promise((resolve) => setTimeout(resolve, delayMs))
+      delayMs *= 2
+    }
+  }
+}
+
+await initWithRetry()
 
 // Prints the DB host (never the username/password) so it's obvious from the
 // boot log alone which database this process is actually talking to.
