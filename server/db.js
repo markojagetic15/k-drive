@@ -1,11 +1,10 @@
 import pg from 'pg'
 import { randomBytes } from 'node:crypto'
-import { existsSync, readFileSync } from 'node:fs'
+import { copyFileSync, existsSync, readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { hashPassword } from './auth.js'
-import { seedAssetsDir } from './paths.js'
-import { uploadToR2 } from './r2.js'
+import { seedAssetsDir, uploadsDir } from './paths.js'
 
 const { Pool } = pg
 
@@ -38,60 +37,18 @@ pool.on('error', (err) => {
 
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7
 
-async function migrateLocalUploadsToR2() {
-  const { rows } = await pool.query('SELECT data FROM content WHERE id = 1')
-  if (rows.length === 0) return
-
-  const contentStr = rows[0].data
-  if (!contentStr.includes('/uploads/')) return
-
-  console.log('[db] Found local /uploads/ paths in content — migrating to R2…')
-
-  const localPaths = new Set(
-    [...contentStr.matchAll(/\/uploads\/([^"]+)/g)].map((m) => m[1]),
-  )
-  const legacyUploadsDir = path.join(__dirname, 'uploads')
-  const replacements = {}
-
-  for (const filename of localPaths) {
-    const seedFile = path.join(seedAssetsDir, filename)
-    const legacyFile = path.join(legacyUploadsDir, filename)
-    const localFile = existsSync(seedFile)
-      ? seedFile
-      : existsSync(legacyFile)
-        ? legacyFile
-        : null
-    if (!localFile) {
-      console.warn(`[db] Local file not found, skipping migration for: ${filename}`)
-      continue
-    }
-    try {
-      const buffer = readFileSync(localFile)
-      const ext = path.extname(filename).toLowerCase() || '.jpg'
-      const key = `${Date.now()}-${randomBytes(6).toString('hex')}${ext}`
-      const url = await uploadToR2(buffer, key, mimeFromExt(ext))
-      replacements[`/uploads/${filename}`] = url
-      console.log(`[db] Migrated ${filename} → ${url}`)
-    } catch (err) {
-      console.error(`[db] Failed to migrate ${filename}:`, err.message)
+// content.seed.json references images as /uploads/<filename>, but the actual
+// files ship checked into the repo under seed-assets/. Copy any seed asset
+// into uploadsDir if it isn't already there so those references resolve —
+// idempotent and safe to call on every boot, not just first init.
+function seedUploadsFromSeedAssets() {
+  for (const filename of readdirSync(seedAssetsDir)) {
+    const dest = path.join(uploadsDir, filename)
+    if (!existsSync(dest)) {
+      copyFileSync(path.join(seedAssetsDir, filename), dest)
+      console.log(`[db] Copied seed asset to uploads: ${filename}`)
     }
   }
-
-  if (Object.keys(replacements).length === 0) {
-    console.warn('[db] No local files could be migrated for the /uploads/ paths found.')
-    return
-  }
-
-  let updatedStr = contentStr
-  for (const [oldPath, newUrl] of Object.entries(replacements)) {
-    updatedStr = updatedStr.replaceAll(oldPath, newUrl)
-  }
-
-  await pool.query('UPDATE content SET data = $1, updated_at = $2 WHERE id = 1', [
-    updatedStr,
-    Date.now(),
-  ])
-  console.log('[db] Content updated with R2 URLs.')
 }
 
 // Content stored before a new top-level section was introduced (e.g. the
@@ -126,17 +83,6 @@ async function backfillMissingContentFields() {
     Date.now(),
   ])
   console.log(`[db] Back-filled missing content fields: ${backfilledFields.join(', ')}`)
-}
-
-function mimeFromExt(ext) {
-  const map = {
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.webp': 'image/webp',
-    '.gif': 'image/gif',
-  }
-  return map[ext] ?? 'application/octet-stream'
 }
 
 async function init() {
@@ -175,14 +121,10 @@ async function init() {
     console.log('[db] Seeded content from content.seed.json')
   }
 
-  // Backfill first: a newly added content field may itself contain fresh
-  // /uploads/ seed-asset paths that still need migrating to R2 below.
+  seedUploadsFromSeedAssets()
+
   await backfillMissingContentFields().catch((err) =>
     console.error('[db] Content backfill error:', err.message),
-  )
-
-  await migrateLocalUploadsToR2().catch((err) =>
-    console.error('[db] R2 migration error:', err.message),
   )
 
   const { rows: adminRows } = await pool.query('SELECT id FROM admin WHERE id = 1')

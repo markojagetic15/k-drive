@@ -51,7 +51,11 @@ router.post('/login', async (req, res) => {
   res.cookie(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    // req.secure (not NODE_ENV) so this adapts automatically: plain HTTP
+    // deployments get a non-Secure cookie that browsers will actually store,
+    // and it flips to Secure on its own once TLS is added in front (relies on
+    // `app.set('trust proxy', 1)` + nginx's X-Forwarded-Proto header).
+    secure: req.secure,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   })
   res.json({ ok: true })

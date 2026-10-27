@@ -11,6 +11,7 @@ import uploadRoutes from './routes/upload.js'
 import inquiryRoutes from './routes/inquiry.js'
 import healthRoutes from './routes/health.js'
 import priceFeedRoutes from './routes/priceFeed.js'
+import { uploadsDir } from './paths.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const rootDir = path.join(__dirname, '..')
@@ -24,18 +25,6 @@ const PORT = process.env.PORT || 4000
 // accurate rate limiting and for the "secure" cookie flag to work correctly.
 app.set('trust proxy', 1)
 
-// Derive the R2 public hostname for the CSP img-src directive so that images
-// served from the R2 bucket (or a custom domain) are not blocked by the browser.
-const r2PublicUrl = process.env.R2_PUBLIC_URL ?? ''
-const r2Origin = (() => {
-  if (!r2PublicUrl) return null
-  try {
-    return new URL(r2PublicUrl).origin
-  } catch {
-    return null
-  }
-})()
-
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -44,8 +33,8 @@ app.use(
         scriptSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-        // Allow images from self, inline data URIs, blob URLs and the R2 bucket.
-        imgSrc: ["'self'", 'data:', 'blob:', ...(r2Origin ? [r2Origin] : [])],
+        // Images are served same-origin from /uploads (local disk storage).
+        imgSrc: ["'self'", 'data:', 'blob:'],
         connectSrc: ["'self'"],
         // The contact section embeds a Google Maps iframe.
         frameSrc: ["'self'", 'https://www.google.com'],
@@ -60,8 +49,7 @@ app.use(
 app.use(express.json({ limit: '2mb' }))
 app.use(cookieParser())
 
-// Note: /uploads static middleware removed — images are now stored in
-// Cloudflare R2 and served directly from the bucket's public URL.
+app.use('/uploads', express.static(uploadsDir))
 app.use('/api/auth', authRoutes)
 app.use('/api/content', contentRoutes)
 app.use('/api/upload', uploadRoutes)
